@@ -1,0 +1,12 @@
+# Android
+android-app/.gradle/
+android-app/local.properties
+android-app/**/build/
+android-app/.idea/
+android-app/*.iml
+android-app/captures/
+android-app/.cxx/
+
+# OS
+.DS_Store
+Thumbs.db
