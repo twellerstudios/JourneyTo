@@ -202,25 +202,77 @@ var JourneyToApi = (function () {
         return '<!-- wp:heading -->\n<h2>' + escapeHtml(text) + '</h2>\n<!-- /wp:heading -->';
     }
 
-    function imageBlock(image) {
+    /**
+     * `isHero` marks the article's lead image — full-bleed and placed above
+     * the very first paragraph, styled by the companion plugin's frontend
+     * CSS (`.jt-hero-image`). Every other image gets the standard
+     * comfortably-large, full-text-width treatment.
+     */
+    function imageBlock(image, isHero) {
         var alt = escapeHtml(image.altText || '');
-        return '<!-- wp:image {"id":' + image.mediaId + ',"sizeSlug":"large","linkDestination":"none"} -->\n' +
-            '<figure class="wp-block-image size-large"><img src="' + image.url + '" alt="' + alt + '" class="wp-image-' + image.mediaId + '"/></figure>\n' +
+        var extraClass = isHero ? ' jt-hero-image' : ' jt-content-image';
+        var sizeSlug = isHero ? 'full' : 'large';
+        return '<!-- wp:image {"id":' + image.mediaId + ',"sizeSlug":"' + sizeSlug + '","linkDestination":"none"' + (isHero ? ',"className":"jt-hero-image"' : '') + '} -->\n' +
+            '<figure class="wp-block-image size-' + sizeSlug + extraClass + '"><img src="' + image.url + '" alt="' + alt + '" class="wp-image-' + image.mediaId + '"/></figure>\n' +
             '<!-- /wp:image -->';
     }
 
-    function embedBlock(video) {
-        var slug = video.platformSlug;
-        return '<!-- wp:embed {"url":"' + video.url + '","type":"video","providerNameSlug":"' + slug + '","responsive":true} -->\n' +
-            '<figure class="wp-block-embed is-type-video is-provider-' + slug + ' wp-block-embed-' + slug + ' wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">\n' +
-            video.url + '\n</div></figure>\n' +
-            '<!-- /wp:embed -->';
+    /**
+     * Video markup. WordPress's core embed block relies on the server
+     * successfully round-tripping an oEmbed request to the provider at
+     * render time — TikTok discovery frequently fails or times out on
+     * shared hosting, which is why embeds were showing up as a bare
+     * plaintext link in an empty box. Instead we embed directly:
+     *   - YouTube: the standard youtube.com/embed/ iframe (always works).
+     *   - TikTok: the tiktok.com/embed/v2/ iframe when a numeric video id
+     *     can be read straight out of the URL (the common case for links
+     *     copied from the app's share sheet).
+     *   - Anything else (or a TikTok short-link without an id in it):
+     *     a polished "Watch on X" card that links out — no dependency on
+     *     the WP server being able to reach the provider at all.
+     * Wrapped in a wp:html block so it stays a normal, editable Custom
+     * HTML block in wp-admin afterwards.
+     */
+    function videoBlock(video) {
+        var portrait = !!video.isShort;
+        if (video.platformSlug === 'youtube') {
+            var ytId = youTubeId(video.url);
+            if (ytId) return htmlBlock(videoIframe('https://www.youtube.com/embed/' + ytId + '?rel=0', portrait, 'YouTube video'));
+        } else if (video.platformSlug === 'tiktok') {
+            var ttId = tikTokId(video.url);
+            if (ttId) return htmlBlock(videoIframe('https://www.tiktok.com/embed/v2/' + ttId, true, 'TikTok video'));
+        }
+        return htmlBlock(watchCard(video));
+    }
+
+    function htmlBlock(innerHtml) {
+        return '<!-- wp:html -->\n' + innerHtml + '\n<!-- /wp:html -->';
+    }
+
+    function videoIframe(src, portrait, title) {
+        var frameClass = 'jt-video-embed__frame' + (portrait ? ' jt-video-embed__frame--portrait' : '');
+        return '<div class="jt-video-embed"><div class="' + frameClass + '">' +
+            '<iframe src="' + src + '" title="' + escapeHtml(title) + '" loading="lazy" ' +
+            'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+            'allowfullscreen></iframe></div></div>';
+    }
+
+    var PLAY_ICON = '<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>';
+
+    function watchCard(video) {
+        var label = video.platformLabel || 'Video';
+        var thumb = video.platformSlug === 'youtube' ? youTubeThumbnail(video.url) : null;
+        var thumbStyle = thumb ? ' style="background-image:url(\'' + thumb + '\')"' : '';
+        return '<a class="jt-watch-card' + (thumb ? ' jt-watch-card--thumb' : '') + '" href="' + escapeHtml(video.url) + '" target="_blank" rel="noopener noreferrer"' + thumbStyle + '>' +
+            '<span class="jt-watch-card__play">' + PLAY_ICON + '</span>' +
+            '<span class="jt-watch-card__text"><span class="jt-watch-card__label">Watch on ' + escapeHtml(label) + '</span>' +
+            '<span class="jt-watch-card__title">' + escapeHtml(video.url) + '</span></span></a>';
     }
 
     /**
-     * Builds the full post_content string: paragraph blocks with images
-     * dynamically woven in, followed by a "Watch" section embedding any
-     * video links using WordPress's own oEmbed block.
+     * Builds the full post_content string: a hero lead image (if any photos
+     * were attached), paragraph blocks with the remaining images dynamically
+     * woven in, followed by a "Watch" section for any video links.
      */
     function composeContent(articleText, images, videos) {
         images = images || [];
@@ -229,9 +281,14 @@ var JourneyToApi = (function () {
         if (paragraphs.length === 0 && images.length === 0 && videos.length === 0) return '';
 
         var blocks = [];
-        var slots = computeInsertionSlots(paragraphs.length, images.length);
+        var hero = images.length > 0 ? images[0] : null;
+        var rest = images.length > 0 ? images.slice(1) : [];
+
+        if (hero) blocks.push(imageBlock(hero, true));
+
+        var slots = computeInsertionSlots(paragraphs.length, rest.length);
         var imagesBySlot = {};
-        images.forEach(function (img, i) {
+        rest.forEach(function (img, i) {
             var slot = slots[i];
             if (!imagesBySlot[slot]) imagesBySlot[slot] = [];
             imagesBySlot[slot].push(img);
@@ -239,17 +296,17 @@ var JourneyToApi = (function () {
 
         paragraphs.forEach(function (p, index) {
             blocks.push(paragraphBlock(p));
-            if (imagesBySlot[index]) imagesBySlot[index].forEach(function (img) { blocks.push(imageBlock(img)); });
+            if (imagesBySlot[index]) imagesBySlot[index].forEach(function (img) { blocks.push(imageBlock(img, false)); });
         });
 
-        // Paragraph-less articles still get their images appended in order.
+        // Paragraph-less articles still get their remaining images appended in order.
         if (paragraphs.length === 0) {
-            images.forEach(function (img) { blocks.push(imageBlock(img)); });
+            rest.forEach(function (img) { blocks.push(imageBlock(img, false)); });
         }
 
         if (videos.length > 0) {
             blocks.push(headingBlock('Watch'));
-            videos.forEach(function (v) { blocks.push(embedBlock(v)); });
+            videos.forEach(function (v) { blocks.push(videoBlock(v)); });
         }
 
         return blocks.join('\n\n');
@@ -258,16 +315,18 @@ var JourneyToApi = (function () {
     /**
      * Appends new images/videos to an existing post's raw content, for the
      * "add more media" flow when editing a post that already has structure
-     * WordPress (or the user) arranged. Existing content is never rewritten.
+     * WordPress (or the user) arranged. Existing content is never rewritten,
+     * and appended images never get the hero treatment (the post already
+     * has its own lead image).
      */
     function appendMedia(existingContent, images, videos) {
         images = images || [];
         videos = videos || [];
         var additions = [];
-        images.forEach(function (img) { additions.push(imageBlock(img)); });
+        images.forEach(function (img) { additions.push(imageBlock(img, false)); });
         if (videos.length > 0) {
             additions.push(headingBlock('Watch'));
-            videos.forEach(function (v) { additions.push(embedBlock(v)); });
+            videos.forEach(function (v) { additions.push(videoBlock(v)); });
         }
         if (additions.length === 0) return existingContent;
         if (!existingContent || !existingContent.trim()) return additions.join('\n\n');
@@ -295,10 +354,21 @@ var JourneyToApi = (function () {
         return trimmed.indexOf('http://') === 0 || trimmed.indexOf('https://') === 0;
     }
 
+    function youTubeId(url) {
+        var m = /(?:youtu\.be\/|shorts\/|v=|\/embed\/)([A-Za-z0-9_-]{11})/.exec(url);
+        return m ? m[1] : null;
+    }
+
+    /** Numeric id out of a canonical tiktok.com/@user/video/{id} link. Null for shortened share links. */
+    function tikTokId(url) {
+        var m = /\/video\/(\d+)/.exec(url);
+        return m ? m[1] : null;
+    }
+
     /** Thumbnail via YouTube's public image CDN — no API key required. Null for non-YouTube links. */
     function youTubeThumbnail(url) {
-        var m = /(?:youtu\.be\/|shorts\/|v=|\/embed\/)([A-Za-z0-9_-]{11})/.exec(url);
-        return m ? ('https://img.youtube.com/vi/' + m[1] + '/hqdefault.jpg') : null;
+        var id = youTubeId(url);
+        return id ? ('https://img.youtube.com/vi/' + id + '/hqdefault.jpg') : null;
     }
 
     return {

@@ -78,6 +78,15 @@
         toastTimer = setTimeout(function () { toastEl.style.display = 'none'; }, 2600);
     }
 
+    /** Opens a URL in the system browser (Chrome Custom Tab on Android via @capacitor/browser), falling back to window.open in a plain browser. */
+    async function openExternal(url) {
+        try {
+            var p = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser;
+            if (p) { await p.open({ url: url }); return; }
+        } catch (e) {}
+        window.open(url, '_blank');
+    }
+
     function el(tag, attrs, children) {
         var node = document.createElement(tag);
         attrs = attrs || {};
@@ -119,6 +128,7 @@
         trash: iconSvg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'),
         edit: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
         empty: iconSvg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'),
+        external: iconSvg('<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>'),
         star: iconSvg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
         logout: iconSvg('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'),
     };
@@ -225,7 +235,10 @@
         loadMoreBtn.style.display = 'none';
 
         view.appendChild(el('div', { class: 'topbar' }, [
-            el('h1', { text: 'Posts' }),
+            el('div', { class: 'brand' }, [
+                el('div', { class: 'brand-mark', text: 'JT' }),
+                el('h1', { text: 'Posts' }),
+            ]),
         ]));
         view.appendChild(el('div', { class: 'search-row' }, [searchInput, statusSelect]));
         view.appendChild(listWrap);
@@ -300,6 +313,12 @@
 
             var chip = el('span', { class: 'chip chip-' + post.status, text: statusLabel(post.status) });
 
+            var viewBtn = null;
+            if (post.status === 'publish' && post.link) {
+                viewBtn = el('button', { class: 'btn btn-icon btn-ghost', html: ICONS.external, title: 'View live' });
+                viewBtn.addEventListener('click', function () { openExternal(post.link); });
+            }
+
             var editBtn = el('button', { class: 'btn btn-icon btn-ghost', html: ICONS.edit, title: 'Edit' });
             editBtn.addEventListener('click', function () { setActiveTab('editor'); renderEditor(post.id); });
 
@@ -321,7 +340,7 @@
                     el('div', { class: 'post-title', text: decodeEntities(post.title.rendered) || '(untitled)' }),
                     el('div', { class: 'post-meta' }, [chip, el('span', { text: formatDate(post.date) })]),
                 ]),
-                el('div', { class: 'post-actions' }, [editBtn, deleteBtn]),
+                el('div', { class: 'post-actions' }, [viewBtn, editBtn, deleteBtn]),
             ]);
             card.addEventListener('click', function (e) {
                 if (e.target.closest('button')) return;
@@ -469,7 +488,7 @@
         }
 
         // Video links
-        function videoSection(label, hint, targetArray) {
+        function videoSection(label, hint, targetArray, isShortSection) {
             var listEl = el('div');
             var urlInput = el('input', { type: 'url', placeholder: 'Paste link…' });
             var addBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Add' });
@@ -482,7 +501,7 @@
                     return;
                 }
                 var platform = JourneyToApi.detectPlatform(url);
-                var link = { url: url, platformSlug: platform.slug, platformLabel: platform.label };
+                var link = { url: url, platformSlug: platform.slug, platformLabel: platform.label, isShort: isShortSection };
                 targetArray.push(link);
                 urlInput.value = '';
                 listEl.appendChild(videoRow(link, targetArray, listEl));
@@ -511,8 +530,8 @@
             return rowEl;
         }
 
-        view.appendChild(videoSection('Shorts', 'TikTok or YouTube Shorts links.', ed.shorts));
-        view.appendChild(videoSection('Long-form video', 'Full YouTube video links.', ed.longform));
+        view.appendChild(videoSection('Shorts', 'TikTok or YouTube Shorts links.', ed.shorts, true));
+        view.appendChild(videoSection('Long-form video', 'Full YouTube video links.', ed.longform, false));
 
         // Categories & Tags
         var categoriesWrap = el('div', { class: 'chip-row' });
@@ -546,7 +565,7 @@
         });
 
         function taxonomyChip(item, selectedArray) {
-            var btn = el('button', { class: 'chip-toggle', text: item.name });
+            var btn = el('button', { class: 'chip-toggle', text: decodeEntities(item.name) });
             if (selectedArray.indexOf(item.id) !== -1) btn.classList.add('selected');
             btn.addEventListener('click', function () {
                 var idx = selectedArray.indexOf(item.id);
@@ -670,7 +689,12 @@
         setActiveTab('settings');
         view.innerHTML = '';
 
-        view.appendChild(el('div', { class: 'topbar' }, [el('h1', { text: 'Settings' })]));
+        view.appendChild(el('div', { class: 'topbar' }, [
+            el('div', { class: 'brand' }, [
+                el('div', { class: 'brand-mark', text: 'JT' }),
+                el('h1', { text: 'Settings' }),
+            ]),
+        ]));
 
         var siteCard = el('div', { class: 'card' }, [
             el('div', { class: 'section-label', text: 'Connected site' }),

@@ -4,7 +4,7 @@ Tags: rest-api, mobile app, social links
 Requires at least: 5.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,14 +23,18 @@ database. This plugin adds the one small thing core doesn't provide:
 * A read-only REST route, `GET /wp-json/autoposter/v1/site-info`, that the
   app calls to display those links as tappable icons.
 * A "Follow us" icon row automatically appended to every published post,
-  and light CSS to keep the TikTok/YouTube embeds the app inserts
-  responsive on any theme.
+  plus CSS that styles the images, hero lead image and TikTok/YouTube
+  video embeds the app inserts so posts read like a professionally
+  designed blog on any theme.
 
 Videos, images, and article text sent from the app become ordinary
-Gutenberg blocks (`wp:paragraph`, `wp:image`, `wp:embed`) — the exact same
-markup the block editor itself produces — so every post stays fully
-editable from wp-admin afterwards, with nothing proprietary in the
-database.
+Gutenberg blocks (`wp:paragraph`, `wp:image`, `wp:html`) — ordinary,
+editable blocks in wp-admin afterwards, with nothing proprietary in the
+database. Videos are embedded with direct `youtube.com/embed` /
+`tiktok.com/embed` iframes rather than WordPress's oEmbed block, since
+oEmbed discovery to TikTok is unreliable on shared hosting — this way
+video embeds render every time, with no server-to-provider round trip
+required.
 
 == Installation ==
 
@@ -55,6 +59,12 @@ Yes — WordPress Application Passwords, which the app uses to authenticate,
 require an HTTPS connection (or a recognized local development URL).
 
 == Changelog ==
+
+= 1.1.0 =
+* Frontend styling overhaul: full-text-width images with a distinct hero
+  lead image treatment, plus reliable iframe-based TikTok/YouTube video
+  embeds (with a polished fallback "Watch on X" card for links an id
+  can't be read from) replacing the old oEmbed-block styling.
 
 = 1.0.0 =
 * Initial release: social links settings, site-info REST route, frontend
