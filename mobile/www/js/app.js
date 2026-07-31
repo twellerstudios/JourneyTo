@@ -966,23 +966,59 @@
         }
     }
 
+    // ── Splash ───────────────────────────────────────────────────
+
+    /** Long enough for the logo + wordmark animation to land before it clears. */
+    var SPLASH_MIN_MS = 2100;
+    var splashShownAt = Date.now();
+
+    (function setUpSplashLogo() {
+        var logo = document.getElementById('splashLogo');
+        var fallback = document.getElementById('splashFallback');
+        if (!logo || !fallback) return;
+        // No logo file dropped in yet (see mobile/README.md) — fall back to the
+        // same "JT" brand mark the rest of the app uses rather than a broken image.
+        function useFallback() {
+            logo.style.display = 'none';
+            fallback.hidden = false;
+        }
+        logo.addEventListener('error', useFallback);
+        if (logo.complete && logo.naturalWidth === 0) useFallback();
+    })();
+
+    /** Fades the splash out once boot is done, holding it for SPLASH_MIN_MS so it never just flickers. */
+    function hideSplash() {
+        var splash = document.getElementById('splash');
+        if (!splash) return;
+        setTimeout(function () {
+            splash.classList.add('is-hiding');
+            setTimeout(function () {
+                if (splash.parentNode) splash.parentNode.removeChild(splash);
+            }, 600);
+        }, Math.max(0, SPLASH_MIN_MS - (Date.now() - splashShownAt)));
+    }
+
     // ── Boot ─────────────────────────────────────────────────────
 
     (async function boot() {
-        var saved = await loadCredentials();
-        if (saved) {
-            JourneyToApi.configure(saved.siteUrl, saved.username, saved.appPassword);
-            try {
-                state.currentUser = await JourneyToApi.verifyLogin();
-                state.credentials = saved;
-                tabbar.style.display = 'flex';
-                setActiveTab('posts');
-                renderPosts();
-                return;
-            } catch (e) {
-                await clearCredentials();
+        try {
+            var saved = await loadCredentials();
+            if (saved) {
+                JourneyToApi.configure(saved.siteUrl, saved.username, saved.appPassword);
+                try {
+                    state.currentUser = await JourneyToApi.verifyLogin();
+                    state.credentials = saved;
+                    tabbar.style.display = 'flex';
+                    setActiveTab('posts');
+                    renderPosts();
+                    return;
+                } catch (e) {
+                    await clearCredentials();
+                }
             }
+            renderLogin();
+        } finally {
+            hideSplash();
         }
-        renderLogin();
     })();
 })();

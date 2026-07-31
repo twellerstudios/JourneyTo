@@ -104,6 +104,28 @@ don't render their formatting as literal text:
 Blank lines are what separate one block from the next either way, same as
 plain paragraphs.
 
+## Adding the logo to the splash screen
+
+The app opens on an animated splash: the logo rises in inside a slowly
+orbiting dashed ring, "JOURNEY TO" animates in letter by letter in the
+brand blue→green ramp, and "Powered by Tweller Studios © 2026" sits at the
+bottom centre. It holds for ~2s (so the animation always lands rather than
+flickering past) and fades out as soon as sign-in state is resolved.
+
+**Drop your logo in as:**
+
+```
+mobile/www/img/journey-to-logo.png
+```
+
+A transparent PNG is best — square or landscape both work, it's scaled to
+fit inside the ring either way. Roughly 400–600px on the long edge is
+plenty. Nothing else needs changing; run `npm run android:sync` and
+rebuild.
+
+Until that file exists the splash falls back to the same "JT" gradient
+brand mark used elsewhere in the app, so it never shows a broken image.
+
 ## Run in a browser (quickest way to try it)
 
 ```bash
@@ -139,8 +161,9 @@ npm run android:run
 ```
 mobile/
 ├── www/
-│   ├── index.html        # shell: #view container + tab bar
+│   ├── index.html        # shell: splash + #view container + tab bar
 │   ├── css/app.css        # Stripe-style white/blue/green design system
+│   ├── img/               # journey-to-logo.png goes here (see above)
 │   └── js/
 │       ├── api.js         # WordPress REST client + Gutenberg block composer
 │       └── app.js         # screens: Login, Posts, Editor, Settings
