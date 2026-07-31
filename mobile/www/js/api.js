@@ -162,11 +162,40 @@ var JourneyToApi = (function () {
     // after paragraph ~4, while a 20-paragraph article with 2 images spaces
     // them much further apart.
 
+    /**
+     * Splits raw article text on blank lines into typed blocks, recognizing
+     * a small amount of Markdown so posts generated elsewhere (e.g. an
+     * imported Post File) render as real headings/lists rather than
+     * literal "## " text: ATX headings (`#` … `######`) and simple
+     * bullet lists (every line in the chunk starting with `-` or `*`).
+     * Everything else is an ordinary paragraph.
+     */
     function splitParagraphs(articleText) {
-        return (articleText || '')
+        var chunks = (articleText || '')
             .split(/\n\s*\n/)
-            .map(function (p) { return p.trim().replace(/\s*\n\s*/g, ' '); })
-            .filter(function (p) { return p.length > 0; });
+            .map(function (c) { return c.trim(); })
+            .filter(function (c) { return c.length > 0; });
+
+        return chunks.map(function (chunk) {
+            var heading = /^(#{1,6})\s+(.*)$/.exec(chunk);
+            if (heading) {
+                return { type: 'heading', level: heading[1].length, text: heading[2].trim() };
+            }
+
+            var lines = chunk.split(/\n/).map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0; });
+            var isList = lines.length > 0 && lines.every(function (l) { return /^[-*]\s+/.test(l); });
+            if (isList) {
+                return { type: 'list', items: lines.map(function (l) { return l.replace(/^[-*]\s+/, '').trim(); }) };
+            }
+
+            return { type: 'paragraph', text: chunk.replace(/\s*\n\s*/g, ' ') };
+        });
+    }
+
+    function blockForParagraph(item) {
+        if (item.type === 'heading') return headingBlock(item.text, item.level);
+        if (item.type === 'list') return listBlock(item.items);
+        return paragraphBlock(item.text);
     }
 
     function computeInsertionSlots(paragraphCount, imageCount) {
@@ -198,8 +227,15 @@ var JourneyToApi = (function () {
         return '<!-- wp:paragraph -->\n<p>' + escapeHtml(text) + '</p>\n<!-- /wp:paragraph -->';
     }
 
-    function headingBlock(text) {
-        return '<!-- wp:heading -->\n<h2>' + escapeHtml(text) + '</h2>\n<!-- /wp:heading -->';
+    function headingBlock(text, level) {
+        level = level >= 1 && level <= 6 ? level : 2;
+        var tag = 'h' + level;
+        return '<!-- wp:heading {"level":' + level + '} -->\n<' + tag + '>' + escapeHtml(text) + '</' + tag + '>\n<!-- /wp:heading -->';
+    }
+
+    function listBlock(items) {
+        var lis = items.map(function (i) { return '<li>' + escapeHtml(i) + '</li>'; }).join('');
+        return '<!-- wp:list -->\n<ul class="wp-block-list">' + lis + '</ul>\n<!-- /wp:list -->';
     }
 
     /**
@@ -321,8 +357,8 @@ var JourneyToApi = (function () {
         });
 
         var midpoint = Math.floor(paragraphs.length / 2);
-        paragraphs.forEach(function (p, index) {
-            blocks.push(paragraphBlock(p));
+        paragraphs.forEach(function (item, index) {
+            blocks.push(blockForParagraph(item));
             if (imagesBySlot[index]) imagesBySlot[index].forEach(function (img) { blocks.push(imageBlock(img, false)); });
             if (longform.length > 0 && index === midpoint) {
                 blocks.push(headingBlock('Watch'));

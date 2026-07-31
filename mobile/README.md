@@ -80,6 +80,18 @@ photo CDNs like Unsplash and Wikimedia Commons do); a host that blocks
 that will fail to download and the import will skip just that photo with
 a toast, rather than failing the whole import.
 
+### Formatting inside `body`
+
+The composer recognizes a small amount of Markdown so generated articles
+don't render their formatting as literal text:
+
+- `## A subheading` → an `<h2>` (`#`…`######` map to `<h1>`–`<h6>`)
+- A block of lines that all start with `-` or `*` → a proper bullet list
+- Everything else is an ordinary paragraph
+
+Blank lines are what separate one block from the next either way, same as
+plain paragraphs.
+
 ## Run in a browser (quickest way to try it)
 
 ```bash
