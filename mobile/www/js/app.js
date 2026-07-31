@@ -913,6 +913,25 @@
         ]);
         view.appendChild(siteCard);
 
+        var checkUpdateBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Check for updates' });
+        checkUpdateBtn.addEventListener('click', async function () {
+            checkUpdateBtn.disabled = true;
+            checkUpdateBtn.textContent = 'Checking…';
+            await checkForUpdate(true);
+            checkUpdateBtn.disabled = false;
+            checkUpdateBtn.textContent = 'Check for updates';
+        });
+        view.appendChild(el('div', { class: 'card' }, [
+            el('div', { class: 'section-label', text: 'App' }),
+            el('div', { class: 'setting-row' }, [
+                el('div', {}, [
+                    el('div', { class: 'post-title', text: 'Journey To Poster' }),
+                    el('div', { class: 'post-meta' }, [el('span', { text: 'Version ' + currentVersion() })]),
+                ]),
+                checkUpdateBtn,
+            ]),
+        ]));
+
         var signOutBtn = el('button', { class: 'btn btn-danger btn-block', html: '', text: 'Sign out' });
         signOutBtn.addEventListener('click', async function () {
             await clearCredentials();
@@ -963,6 +982,119 @@
             siteCard.innerHTML = '';
             siteCard.appendChild(el('div', { class: 'section-label', text: 'Connected site' }));
             siteCard.appendChild(el('p', { text: state.credentials.siteUrl }));
+        }
+    }
+
+    // ── Updates ──────────────────────────────────────────────────
+    // The app is sideloaded, not shipped through Play, so nothing tells it
+    // a newer build exists — it has to look. See www/js/version.js for
+    // where it looks and how to repoint that.
+
+    var UPDATE_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
+    var UPDATE_LAST_CHECK_KEY = 'jt_update_last_check';
+
+    function currentVersion() {
+        return (typeof JT_VERSION === 'string' && JT_VERSION) || '0.0.0';
+    }
+
+    /** -1 / 0 / 1, comparing MAJOR.MINOR.PATCH numerically (so 1.10.0 > 1.9.0, which a string compare gets wrong). */
+    function compareVersions(a, b) {
+        var pa = String(a || '').replace(/^v/i, '').split('.');
+        var pb = String(b || '').replace(/^v/i, '').split('.');
+        for (var i = 0; i < 3; i++) {
+            var x = parseInt(pa[i], 10) || 0;
+            var y = parseInt(pb[i], 10) || 0;
+            if (x > y) return 1;
+            if (x < y) return -1;
+        }
+        return 0;
+    }
+
+    /** Reads the configured feed and normalizes it to {version, apkUrl, notes}. */
+    async function fetchLatestBuild() {
+        var feed = (typeof JT_UPDATE_FEED === 'object' && JT_UPDATE_FEED) || {};
+
+        if (feed.kind === 'json') {
+            if (!feed.url) throw new Error('No update URL configured.');
+            var jres = await fetch(feed.url, { cache: 'no-store' });
+            if (!jres.ok) throw new Error('HTTP ' + jres.status);
+            var jd = await jres.json();
+            return {
+                version: String(jd.version || '').replace(/^v/i, ''),
+                apkUrl: jd.apkUrl || '',
+                notes: jd.notes || '',
+            };
+        }
+
+        if (!feed.repo) throw new Error('No update repo configured.');
+        var gres = await fetch('https://api.github.com/repos/' + feed.repo + '/releases/latest', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/vnd.github+json' },
+        });
+        if (gres.status === 404) {
+            // Also what a private repo returns to an unauthenticated request.
+            throw new Error('No published release found for ' + feed.repo + '.');
+        }
+        if (!gres.ok) throw new Error('HTTP ' + gres.status);
+        var rel = await gres.json();
+        var apk = (rel.assets || []).filter(function (a) { return /\.apk$/i.test(a.name || ''); })[0];
+        return {
+            version: String(rel.tag_name || '').replace(/^v/i, ''),
+            // With no .apk attached, send them to the release page rather than nowhere.
+            apkUrl: apk ? apk.browser_download_url : (rel.html_url || ''),
+            notes: rel.body || '',
+        };
+    }
+
+    function showUpdateModal(build) {
+        var notes = (build.notes || '').trim();
+        var backdrop = el('div', { class: 'modal-backdrop' });
+
+        var laterBtn = el('button', { class: 'btn btn-secondary', text: 'Later' });
+        var downloadBtn = el('button', { class: 'btn btn-primary', text: 'Download' });
+
+        var card = el('div', { class: 'modal' }, [
+            el('div', { class: 'modal__badge', text: 'Update available' }),
+            el('h2', { class: 'modal__title', text: 'Version ' + build.version }),
+            el('p', { class: 'modal__sub', text: "You're on " + currentVersion() + '.' }),
+            notes ? el('div', { class: 'modal__notes', text: notes }) : null,
+            el('p', { class: 'modal__hint', text: 'The APK downloads in your browser — open it from the download notification to install over the current version.' }),
+            el('div', { class: 'modal__actions' }, [laterBtn, downloadBtn]),
+        ]);
+
+        backdrop.appendChild(card);
+        document.body.appendChild(backdrop);
+
+        function close() { if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop); }
+        laterBtn.addEventListener('click', close);
+        backdrop.addEventListener('click', function (e) { if (e.target === backdrop) close(); });
+        downloadBtn.addEventListener('click', function () {
+            if (!build.apkUrl) { toast('That release has no download attached yet.'); return; }
+            openExternal(build.apkUrl);
+            close();
+        });
+    }
+
+    /**
+     * `manual` = triggered from Settings: always checks, and reports the
+     * "you're up to date" / failure cases out loud. The automatic call on
+     * boot stays silent unless there's actually something to install.
+     */
+    async function checkForUpdate(manual) {
+        if (!manual) {
+            var last = parseInt(localStorage.getItem(UPDATE_LAST_CHECK_KEY) || '0', 10);
+            if (last && Date.now() - last < UPDATE_CHECK_INTERVAL_MS) return;
+        }
+        try {
+            var build = await fetchLatestBuild();
+            localStorage.setItem(UPDATE_LAST_CHECK_KEY, String(Date.now()));
+            if (build.version && compareVersions(build.version, currentVersion()) > 0) {
+                showUpdateModal(build);
+            } else if (manual) {
+                toast("You're on the latest version (" + currentVersion() + ').');
+            }
+        } catch (e) {
+            if (manual) toast(e.message || "Couldn't check for updates.");
         }
     }
 
@@ -1019,6 +1151,9 @@
             renderLogin();
         } finally {
             hideSplash();
+            // Deliberately not awaited: a slow or unreachable update feed must
+            // never hold up the app, and a failed check is silent here.
+            setTimeout(function () { checkForUpdate(false); }, SPLASH_MIN_MS + 800);
         }
     })();
 })();

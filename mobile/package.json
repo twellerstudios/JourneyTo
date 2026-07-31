@@ -1,12 +1,13 @@
 {
   "name": "journeyto-poster-mobile",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Journey To Poster — create, edit and publish WordPress posts to letsjourneyto.com from your phone",
   "private": true,
   "scripts": {
     "start": "npx serve www -l 8100",
-    "android:init": "npx cap add android && node scripts/patch-android.js",
-    "android:sync": "npx cap sync android && node scripts/patch-android.js",
+    "android:init": "npx cap add android && node scripts/patch-android.js && node scripts/set-version.js",
+    "android:sync": "node scripts/set-version.js && npx cap sync android && node scripts/patch-android.js && node scripts/set-version.js",
+    "version:set": "node scripts/set-version.js",
     "android:open": "npx cap open android",
     "android:run": "npx cap run android",
     "android:patch": "node scripts/patch-android.js"

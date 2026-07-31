@@ -126,6 +126,100 @@ rebuild.
 Until that file exists the splash falls back to the same "JT" gradient
 brand mark used elsewhere in the app, so it never shows a broken image.
 
+## Releasing a build (and in-app updates)
+
+The app is sideloaded rather than shipped through Play, so releases are
+GitHub Releases and the app checks for new ones itself.
+
+`.github/workflows/android-release.yml` builds a signed APK and attaches it
+to a GitHub Release whenever you push a `v*` tag. Team members download it
+from the release page; installed copies notice the new version and prompt.
+
+### One-time setup
+
+**1. Create a signing keystore.** Android only installs an update over an
+existing app when both APKs are signed with the **same** key — so this
+keystore has to be created once and then never lost. Back it up somewhere
+safe; losing it means everyone has to uninstall and reinstall to move to a
+newer build.
+
+```bash
+keytool -genkey -v -keystore journey-to-release.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias journey-to
+```
+
+**2. Add four repository secrets** (Settings → Secrets and variables →
+Actions → New repository secret):
+
+| Secret | Value |
+|---|---|
+| `ANDROID_KEYSTORE_BASE64` | `base64 -w0 journey-to-release.jks` (macOS: `base64 -i journey-to-release.jks`) |
+| `ANDROID_KEYSTORE_PASSWORD` | the keystore password you just set |
+| `ANDROID_KEY_ALIAS` | `journey-to` |
+| `ANDROID_KEY_PASSWORD` | the key password (same as the keystore password unless you set a different one) |
+
+Don't commit the `.jks` file itself.
+
+**3. Make sure the update feed points somewhere the team can actually
+reach** — see "If the repo is private" below.
+
+### Shipping a version
+
+```bash
+cd mobile
+npm version 1.1.0 --no-git-tag-version    # bumps package.json only
+git commit -am "Release 1.1.0"
+git tag v1.1.0
+git push --follow-tags
+```
+
+The tag must match `mobile/package.json` — CI fails the build if they
+disagree, since the app compares its baked-in version against the release
+tag. `scripts/set-version.js` propagates that one version into
+`www/js/version.js` and the Android `versionName`/`versionCode`, so
+`package.json` is the only place you ever edit it.
+
+Share this link with the team — it always resolves to the newest build:
+
+```
+https://github.com/twellerstudios/JourneyTo/releases/latest
+```
+
+On first install Android will ask them to allow installing apps from the
+browser ("unknown sources"); that's a one-time per-device prompt.
+
+### How the in-app check behaves
+
+On launch (and from **Settings → App → Check for updates**) the app reads
+the latest release, compares versions, and shows an update prompt with the
+release notes if there's a newer one. Tapping **Download** opens the APK in
+the browser; opening it from the download notification installs it over the
+existing app, preserving the signed-in site. The automatic check is
+throttled to once every 6 hours, runs after the UI is already up, and stays
+silent on failure — a slow or unreachable feed never blocks or nags.
+
+### If the repo is private
+
+GitHub's API returns 404 for a private repo without a token, and its
+release assets can't be downloaded without one either — and an app handed
+to other people can't safely carry a token. So with a private repo the
+GitHub feed won't work. Two options:
+
+- **Host the manifest and APK yourself** (e.g. on letsjourneyto.com). Edit
+  `JT_UPDATE_FEED` in `www/js/version.js` to `kind: 'json'` with a `url`,
+  and serve:
+  ```json
+  { "version": "1.1.0",
+    "apkUrl": "https://letsjourneyto.com/app/journey-to.apk",
+    "notes": "What changed in this build" }
+  ```
+  Upload the APK CI produced (it's also on the workflow run as a build
+  artifact) alongside that file.
+- **Or keep a second, public repo** holding only the releases, and point
+  `JT_UPDATE_FEED.repo` at it.
+
+Nothing outside `JT_UPDATE_FEED` needs changing either way.
+
 ## Run in a browser (quickest way to try it)
 
 ```bash
@@ -165,11 +259,14 @@ mobile/
 │   ├── css/app.css        # Stripe-style white/blue/green design system
 │   ├── img/               # journey-to-logo.png goes here (see above)
 │   └── js/
+│       ├── version.js     # build version + where to check for updates
 │       ├── api.js         # WordPress REST client + Gutenberg block composer
 │       └── app.js         # screens: Login, Posts, Editor, Settings
-├── package.json
+├── package.json           # the one place the version is bumped
 ├── capacitor.config.json
-└── scripts/patch-android.js  # re-applies INTERNET permission after cap sync
+└── scripts/
+    ├── patch-android.js   # re-applies INTERNET permission after cap sync
+    └── set-version.js     # package.json version -> version.js + build.gradle
 ```
 
 Credentials (site URL, username, Application Password) are stored via
