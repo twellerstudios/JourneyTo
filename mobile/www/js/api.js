@@ -273,16 +273,23 @@ var JourneyToApi = (function () {
      * Builds the full post_content string: a hero lead image (if any photos
      * were attached), paragraph blocks with the remaining images dynamically
      * woven in, followed by a "Watch" section for any video links.
+     *
+     * The hero is whichever image is starred as the featured image
+     * (`heroMediaId`) — not simply the first one uploaded — since photos
+     * can arrive from more than one source (an imported post file's stock
+     * photos plus shots taken on-location) in an order that doesn't
+     * necessarily match which one should lead the article. Falls back to
+     * the first image if nothing is starred.
      */
-    function composeContent(articleText, images, videos) {
+    function composeContent(articleText, images, videos, heroMediaId) {
         images = images || [];
         videos = videos || [];
         var paragraphs = splitParagraphs(articleText);
         if (paragraphs.length === 0 && images.length === 0 && videos.length === 0) return '';
 
         var blocks = [];
-        var hero = images.length > 0 ? images[0] : null;
-        var rest = images.length > 0 ? images.slice(1) : [];
+        var hero = (heroMediaId != null && images.find(function (i) { return i.mediaId === heroMediaId; })) || images[0] || null;
+        var rest = images.filter(function (i) { return i !== hero; });
 
         if (hero) blocks.push(imageBlock(hero, true));
 
@@ -371,6 +378,63 @@ var JourneyToApi = (function () {
         return id ? ('https://img.youtube.com/vi/' + id + '/hqdefault.jpg') : null;
     }
 
+    // ── Imported post files ──────────────────────────────────────
+    // A "Journey To Post" file (plain JSON) carries everything the editor
+    // would otherwise need typed in by hand: title, body, images (as
+    // URLs to fetch — on-device photos are still added the normal way),
+    // video links, categories and tags. See mobile/README.md for the
+    // full schema this validates against.
+
+    var ALLOWED_STATUSES = ['draft', 'publish', 'pending', 'future'];
+
+    /** Parses + validates an imported post file's JSON text. Throws a user-facing Error on anything malformed. */
+    function parseImportedPost(jsonText) {
+        var data;
+        try {
+            data = JSON.parse(jsonText);
+        } catch (e) {
+            throw new Error("That file isn't valid JSON.");
+        }
+        if (!data || typeof data !== 'object') throw new Error('Empty or invalid post file.');
+        if (typeof data.title !== 'string' || !data.title.trim()) {
+            throw new Error('The post file needs a non-empty "title".');
+        }
+
+        var status = ALLOWED_STATUSES.indexOf(data.status) !== -1 ? data.status : 'draft';
+
+        var images = Array.isArray(data.images)
+            ? data.images
+                .filter(function (i) { return i && typeof i.url === 'string' && i.url.trim(); })
+                .map(function (i) { return { url: i.url.trim(), altText: typeof i.altText === 'string' ? i.altText : '' }; })
+            : [];
+
+        var videos = Array.isArray(data.videos)
+            ? data.videos
+                .filter(function (v) { return v && isValidVideoUrl(v.url); })
+                .map(function (v) {
+                    var platform = detectPlatform(v.url);
+                    return { url: v.url.trim(), platformSlug: platform.slug, platformLabel: platform.label, isShort: !!v.isShort };
+                })
+            : [];
+
+        var categories = Array.isArray(data.categories)
+            ? data.categories.filter(function (c) { return typeof c === 'string' && c.trim(); }).map(function (c) { return c.trim(); })
+            : [];
+        var tags = Array.isArray(data.tags)
+            ? data.tags.filter(function (t) { return typeof t === 'string' && t.trim(); }).map(function (t) { return t.trim(); })
+            : [];
+
+        return {
+            title: data.title.trim(),
+            body: typeof data.body === 'string' ? data.body : '',
+            status: status,
+            images: images,
+            videos: videos,
+            categories: categories,
+            tags: tags,
+        };
+    }
+
     return {
         configure: configure,
         isConfigured: isConfigured,
@@ -392,5 +456,6 @@ var JourneyToApi = (function () {
         looksLikeShort: looksLikeShort,
         isValidVideoUrl: isValidVideoUrl,
         youTubeThumbnail: youTubeThumbnail,
+        parseImportedPost: parseImportedPost,
     };
 })();

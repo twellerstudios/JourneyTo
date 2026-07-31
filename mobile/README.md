@@ -18,13 +18,16 @@ wp-admin afterwards.
 
 - **Sign in** with your site URL, WordPress username, and an Application
   Password (WP Admin → Users → Your Profile → Application Passwords).
-- **Create a post**: paste article text (or import a `.txt` file), attach
-  photos, and the app weaves them into the article at evenly-spaced points
-  automatically — different spacing for a short vs. a long article.
+- **Create a post**: paste article text (or import a `.txt` file, or a
+  whole pre-built **Post File** — see below), attach photos, and the app
+  weaves them into the article at evenly-spaced points automatically —
+  the first photo becomes a full-bleed hero image, the rest are spaced
+  through the paragraphs.
 - **Add video**: paste a TikTok or YouTube Shorts link into "Shorts", or a
-  full YouTube video link into "Long-form" — both are inserted using
-  WordPress's own native oEmbed block, so they render exactly like videos
-  added through the block editor.
+  full YouTube video link into "Long-form". These are inserted as direct
+  `youtube.com/embed` / `tiktok.com/embed` iframes (not WordPress's oEmbed
+  block — oEmbed discovery to TikTok is unreliable on shared hosting, so
+  embedding directly is what actually renders reliably).
 - **Categories, tags, featured image, draft/publish/pending/scheduled** —
   all standard WordPress fields, with inline "add new" for categories/tags.
 - **Manage posts**: search, filter by status, edit, and delete — reading
@@ -32,6 +35,47 @@ wp-admin afterwards.
 - **Follow us icons**: a social-links row (Facebook, Instagram, TikTok,
   YouTube, X, Pinterest, LinkedIn, website) sourced from the companion
   plugin in `../wordpress-plugin/autoposter-companion`.
+
+## Importing a pre-built Post File
+
+Tap **Import Post File** on the New Post screen and pick a `.json` file
+matching this schema — the whole point is that this can be generated
+somewhere else entirely (a Claude chat, a future skill, a script) and just
+dropped into the app to review and publish:
+
+```json
+{
+  "title": "10 Hidden Beaches in Trinidad You Need to Visit",
+  "status": "draft",
+  "body": "Paragraph one of the article...\n\nParagraph two...\n\nParagraph three...",
+  "images": [
+    { "url": "https://images.unsplash.com/photo-...", "altText": "Maracas Bay at sunrise" }
+  ],
+  "videos": [
+    { "url": "https://www.tiktok.com/@user/video/7123456789012345678", "isShort": true },
+    { "url": "https://www.youtube.com/watch?v=abc123", "isShort": false }
+  ],
+  "categories": ["Travel", "Trinidad"],
+  "tags": ["beaches", "hidden gems", "travel tips"]
+}
+```
+
+Only `title` is required — everything else defaults to empty/`"draft"`.
+On import: `title`/`body`/`status` fill the form directly, `categories`/
+`tags` are matched by name against the site's existing terms (creating
+any that don't exist yet), `videos` are added to the Shorts/Long-form
+sections per their `isShort` flag, and each `images[].url` is downloaded
+and uploaded to the WordPress media library exactly like a manually
+picked photo — including becoming the hero image if it's first. **Photos
+taken on-device still get added the normal way** with "+ Add Photos"
+after importing — imported and on-device photos share one list, and
+whichever one you star becomes the featured/hero image regardless of
+which source it came from.
+
+Image URLs need to be on a host that allows cross-origin fetches (stock
+photo CDNs like Unsplash and Wikimedia Commons do); a host that blocks
+that will fail to download and the import will skip just that photo with
+a toast, rather than failing the whole import.
 
 ## Run in a browser (quickest way to try it)
 

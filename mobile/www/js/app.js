@@ -408,6 +408,58 @@
             reader.readAsText(file);
         });
 
+        // Import a whole pre-built post (title, body, image URLs, video links,
+        // categories, tags) generated elsewhere — see mobile/README.md for the
+        // JSON schema. On-device photos are still added separately below.
+        var importPostInput = el('input', { type: 'file', accept: '.json,application/json', style: 'display:none' });
+        var importPostBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Import Post File' });
+        importPostBtn.addEventListener('click', function () { importPostInput.click(); });
+        importPostInput.addEventListener('change', function () {
+            var file = importPostInput.files[0];
+            importPostInput.value = '';
+            if (file) importPostFile(file);
+        });
+
+        async function importPostFile(file) {
+            var text;
+            try {
+                text = await file.text();
+            } catch (e) {
+                toast("Couldn't read that file.");
+                return;
+            }
+            var parsed;
+            try {
+                parsed = JourneyToApi.parseImportedPost(text);
+            } catch (e) {
+                toast(e.message);
+                return;
+            }
+
+            titleInput.value = parsed.title;
+            articleTextarea.value = parsed.body;
+            statusSelect.value = parsed.status;
+
+            await taxonomiesReady;
+            for (var i = 0; i < parsed.categories.length; i++) {
+                await ensureTaxonomySelected(parsed.categories[i], ed.categories, ed.selectedCategoryIds, JourneyToApi.createCategory);
+            }
+            for (var j = 0; j < parsed.tags.length; j++) {
+                await ensureTaxonomySelected(parsed.tags[j], ed.tags, ed.selectedTagIds, JourneyToApi.createTag);
+            }
+            refreshTaxonomyChips();
+
+            parsed.videos.forEach(function (v) {
+                (v.isShort ? shortsSection : longformSection).addLink(v.url);
+            });
+
+            parsed.images.forEach(function (img) {
+                uploadImageFromUrl(img.url, img.altText);
+            });
+
+            toast('Post imported — add any on-location photos, then review and publish.');
+        }
+
         var contentCard;
         if (mode === 'CREATE') {
             contentCard = el('div', { class: 'card' }, [
@@ -415,7 +467,8 @@
                     el('label', { text: 'Article' }),
                     articleTextarea,
                 ]),
-                importBtn, importInput,
+                el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' }, [importBtn, importPostBtn]),
+                importInput, importPostInput,
             ]);
         } else {
             contentCard = el('div', { class: 'card' }, [
@@ -448,10 +501,30 @@
         });
 
         async function uploadImage(file) {
+            return uploadFileObject(file);
+        }
+
+        /** Downloads an image from a URL (e.g. a stock photo referenced by an imported post file) and uploads it the same way a picked file is. */
+        async function uploadImageFromUrl(url, altText) {
+            try {
+                var res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var blob = await res.blob();
+                var ext = (blob.type && blob.type.split('/')[1]) || 'jpg';
+                var filename = 'image-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7) + '.' + ext;
+                var file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
+                await uploadFileObject(file, altText || null);
+            } catch (e) {
+                toast("Couldn't download one of the imported images.");
+            }
+        }
+
+        async function uploadFileObject(file, altTextOverride) {
             var tile = el('div', { class: 'image-tile uploading' }, [el('div', { class: 'spinner' })]);
             imageGrid.appendChild(tile);
             try {
-                var media = await JourneyToApi.uploadMedia(file, titleInput.value.trim() || null);
+                var altText = altTextOverride != null ? altTextOverride : (titleInput.value.trim() || null);
+                var media = await JourneyToApi.uploadMedia(file, altText);
                 var image = { mediaId: media.id, url: media.source_url || '', altText: media.alt_text || '' };
                 ed.images.push(image);
                 if (ed.featuredImageId === null) ed.featuredImageId = image.mediaId;
@@ -497,25 +570,30 @@
             var addBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Add' });
             var row = el('div', { class: 'inline-add' }, [urlInput, addBtn]);
 
-            addBtn.addEventListener('click', function () {
-                var url = urlInput.value.trim();
+            /** Adds a link both to the backing array and the visible list — used by the Add button and by post-file import alike. */
+            function addLink(url) {
                 if (!JourneyToApi.isValidVideoUrl(url)) {
                     toast('Please paste a full video link (starting with https://).');
-                    return;
+                    return null;
                 }
                 var platform = JourneyToApi.detectPlatform(url);
                 var link = { url: url, platformSlug: platform.slug, platformLabel: platform.label, isShort: isShortSection };
                 targetArray.push(link);
-                urlInput.value = '';
                 listEl.appendChild(videoRow(link, targetArray, listEl));
+                return link;
+            }
+
+            addBtn.addEventListener('click', function () {
+                if (addLink(urlInput.value.trim())) urlInput.value = '';
             });
 
-            return el('div', { class: 'card' }, [
+            var card = el('div', { class: 'card' }, [
                 el('div', { class: 'section-label', text: label }),
                 row,
                 el('p', { class: 'hint', text: hint }),
                 listEl,
             ]);
+            return { card: card, addLink: addLink };
         }
 
         function videoRow(link, targetArray, listEl) {
@@ -533,8 +611,10 @@
             return rowEl;
         }
 
-        view.appendChild(videoSection('Shorts', 'TikTok or YouTube Shorts links.', ed.shorts, true));
-        view.appendChild(videoSection('Long-form video', 'Full YouTube video links.', ed.longform, false));
+        var shortsSection = videoSection('Shorts', 'TikTok or YouTube Shorts links.', ed.shorts, true);
+        var longformSection = videoSection('Long-form video', 'Full YouTube video links.', ed.longform, false);
+        view.appendChild(shortsSection.card);
+        view.appendChild(longformSection.card);
 
         // Categories & Tags
         var categoriesWrap = el('div', { class: 'chip-row' });
@@ -578,6 +658,29 @@
             return btn;
         }
 
+        function refreshTaxonomyChips() {
+            categoriesWrap.innerHTML = '';
+            ed.categories.forEach(function (c) { categoriesWrap.appendChild(taxonomyChip(c, ed.selectedCategoryIds)); });
+            tagsWrap.innerHTML = '';
+            ed.tags.forEach(function (t) { tagsWrap.appendChild(taxonomyChip(t, ed.selectedTagIds)); });
+        }
+
+        /** Selects a category/tag by name (case-insensitive), creating it on the site first if it doesn't already exist — used by post-file import. */
+        async function ensureTaxonomySelected(name, list, selectedIds, createFn) {
+            var match = list.find(function (item) { return decodeEntities(item.name).toLowerCase() === name.toLowerCase(); });
+            if (match) {
+                if (selectedIds.indexOf(match.id) === -1) selectedIds.push(match.id);
+                return;
+            }
+            try {
+                var created = await createFn(name);
+                list.push(created);
+                selectedIds.push(created.id);
+            } catch (e) {
+                toast('Could not add "' + name + '".');
+            }
+        }
+
         view.appendChild(el('div', { class: 'card' }, [
             el('div', { class: 'section-label', text: 'Categories' }),
             categoriesWrap,
@@ -614,7 +717,7 @@
             try {
                 var allVideos = ed.shorts.concat(ed.longform);
                 var content = mode === 'CREATE'
-                    ? JourneyToApi.composeContent(articleTextarea.value, ed.images, allVideos)
+                    ? JourneyToApi.composeContent(articleTextarea.value, ed.images, allVideos, ed.featuredImageId)
                     : JourneyToApi.appendMedia(articleTextarea.value, ed.images, allVideos);
 
                 var body = {
@@ -639,21 +742,17 @@
             }
         });
 
-        // Load taxonomies
-        (async function loadTaxonomies() {
+        // Load taxonomies (post-file import awaits this before matching category/tag names)
+        async function loadTaxonomies() {
             try {
-                var cats = await JourneyToApi.getCategories();
-                ed.categories = cats;
-                categoriesWrap.innerHTML = '';
-                cats.forEach(function (c) { categoriesWrap.appendChild(taxonomyChip(c, ed.selectedCategoryIds)); });
+                ed.categories = await JourneyToApi.getCategories();
             } catch (e) {}
             try {
-                var tags = await JourneyToApi.getTags();
-                ed.tags = tags;
-                tagsWrap.innerHTML = '';
-                tags.forEach(function (t) { tagsWrap.appendChild(taxonomyChip(t, ed.selectedTagIds)); });
+                ed.tags = await JourneyToApi.getTags();
             } catch (e) {}
-        })();
+            refreshTaxonomyChips();
+        }
+        var taxonomiesReady = loadTaxonomies();
 
         // Load existing post (EDIT mode)
         if (mode === 'EDIT') {
@@ -673,11 +772,9 @@
                     ed.featuredImageId = post.featured_media > 0 ? post.featured_media : null;
                     ed.selectedCategoryIds = (post.categories || []).slice();
                     ed.selectedTagIds = (post.tags || []).slice();
-                    // Re-render taxonomy selections now that ids are known
-                    categoriesWrap.innerHTML = '';
-                    ed.categories.forEach(function (c) { categoriesWrap.appendChild(taxonomyChip(c, ed.selectedCategoryIds)); });
-                    tagsWrap.innerHTML = '';
-                    ed.tags.forEach(function (t) { tagsWrap.appendChild(taxonomyChip(t, ed.selectedTagIds)); });
+                    // Re-render taxonomy selections now that ids are known (self-healing if
+                    // loadTaxonomies() hasn't resolved yet — it re-renders again once it does).
+                    refreshTaxonomyChips();
                 } catch (e) {
                     showError(e.message);
                 } finally {
