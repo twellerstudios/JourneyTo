@@ -487,9 +487,24 @@
         var addPhotosBtn = el('button', { class: 'btn btn-secondary btn-sm', text: '+ Add Photos' });
         addPhotosBtn.addEventListener('click', function () { imageInput.click(); });
 
+        var imageUrlInput = el('input', { type: 'url', placeholder: 'Paste an image URL…' });
+        var addImageUrlBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Add via URL' });
+        function addImageFromUrlInput() {
+            var url = imageUrlInput.value.trim();
+            if (!url) return;
+            if (!JourneyToApi.isValidVideoUrl(url)) { toast("That doesn't look like a full image link."); return; }
+            uploadImageFromUrl(url, null);
+            imageUrlInput.value = '';
+        }
+        addImageUrlBtn.addEventListener('click', addImageFromUrlInput);
+        imageUrlInput.addEventListener('input', function (e) {
+            if (e.inputType === 'insertFromPaste') addImageFromUrlInput();
+        });
+
         view.appendChild(el('div', { class: 'card' }, [
             el('div', { class: 'section-label', text: 'Photos' }),
-            addPhotosBtn, imageInput,
+            el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' }, [addPhotosBtn]),
+            el('div', { class: 'inline-add' }, [imageUrlInput, addImageUrlBtn]),
             imageGrid,
             el('p', { class: 'hint', text: 'Photos are woven into the article automatically. Tap the star to set the featured image.' }),
         ]));
@@ -499,6 +514,7 @@
             files.forEach(uploadImage);
             imageInput.value = '';
         });
+        view.appendChild(imageInput);
 
         async function uploadImage(file) {
             return uploadFileObject(file);
@@ -528,32 +544,44 @@
                 var image = { mediaId: media.id, url: media.source_url || '', altText: media.alt_text || '' };
                 ed.images.push(image);
                 if (ed.featuredImageId === null) ed.featuredImageId = image.mediaId;
-                tile.classList.remove('uploading');
-                tile.innerHTML = '';
-                tile.appendChild(el('img', { src: image.url }));
-                var removeBtn = el('button', { class: 'remove', text: '×' });
-                var starBtn = el('button', { class: 'star', html: ICONS.star });
-                tile.appendChild(removeBtn);
-                tile.appendChild(starBtn);
-                refreshFeaturedStyling();
-
-                removeBtn.addEventListener('click', function () {
-                    ed.images = ed.images.filter(function (i) { return i.mediaId !== image.mediaId; });
-                    if (ed.featuredImageId === image.mediaId) {
-                        ed.featuredImageId = ed.images.length ? ed.images[0].mediaId : null;
-                    }
-                    tile.remove();
-                    refreshFeaturedStyling();
-                });
-                starBtn.addEventListener('click', function () {
-                    ed.featuredImageId = image.mediaId;
-                    refreshFeaturedStyling();
-                });
-                tile.setAttribute('data-media-id', image.mediaId);
+                tile.remove();
+                renderImageTile(image);
             } catch (e) {
                 tile.remove();
                 toast(e.message || "Couldn't upload one of the selected images.");
             }
+        }
+
+        /** Builds one Photos-grid tile. Used both for freshly uploaded images and ones recovered from an existing post's content. */
+        function renderImageTile(image) {
+            var tile = el('div', { class: 'image-tile' }, [el('img', { src: image.url })]);
+            var removeBtn = el('button', { class: 'remove', text: '×' });
+            var starBtn = el('button', { class: 'star', html: ICONS.star });
+            tile.appendChild(removeBtn);
+            tile.appendChild(starBtn);
+            tile.setAttribute('data-media-id', image.mediaId);
+            imageGrid.appendChild(tile);
+
+            removeBtn.addEventListener('click', function () {
+                ed.images = ed.images.filter(function (i) { return i.mediaId !== image.mediaId; });
+                if (ed.featuredImageId === image.mediaId) {
+                    ed.featuredImageId = ed.images.length ? ed.images[0].mediaId : null;
+                }
+                // Recovered images are already embedded in the raw content —
+                // "remove" needs to actually strip that block, not just the tile.
+                if (image.isExisting) {
+                    articleTextarea.value = JourneyToApi.removeBlockContaining(articleTextarea.value, 'wp-image-' + image.mediaId);
+                }
+                tile.remove();
+                refreshFeaturedStyling();
+            });
+            starBtn.addEventListener('click', function () {
+                ed.featuredImageId = image.mediaId;
+                refreshFeaturedStyling();
+            });
+
+            refreshFeaturedStyling();
+            return tile;
         }
 
         function refreshFeaturedStyling() {
@@ -563,6 +591,36 @@
             });
         }
 
+        /**
+         * A TikTok share-sheet link (vm.tiktok.com/xxxx, vt.tiktok.com/xxxx)
+         * redirects to the canonical tiktok.com/@user/video/{id} URL the
+         * embed needs, but that redirect can't be followed from plain
+         * browser fetch() — TikTok doesn't grant it cross-origin, so the
+         * response is opaque. Capacitor's native HTTP layer isn't a
+         * browser context, so it isn't subject to that restriction and can
+         * just read the final URL back. Falls back to the pasted URL
+         * unchanged if that's not available (e.g. testing in a plain
+         * browser via `npm start`) — it still posts fine, just as a
+         * "Watch on TikTok" card instead of an inline player.
+         */
+        async function resolveTikTokUrl(url) {
+            if (/\/video\/\d+/.test(url)) return url;
+            var http = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+            if (!http) return url;
+            try {
+                var res = await http.request({
+                    method: 'GET',
+                    url: url,
+                    connectTimeout: 8000,
+                    readTimeout: 8000,
+                    headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36' },
+                });
+                return (res && res.url) || url;
+            } catch (e) {
+                return url;
+            }
+        }
+
         // Video links
         function videoSection(label, hint, targetArray, isShortSection) {
             var listEl = el('div');
@@ -570,21 +628,39 @@
             var addBtn = el('button', { class: 'btn btn-secondary btn-sm', text: 'Add' });
             var row = el('div', { class: 'inline-add' }, [urlInput, addBtn]);
 
-            /** Adds a link both to the backing array and the visible list — used by the Add button and by post-file import alike. */
-            function addLink(url) {
+            /** Adds a pasted/typed link: validates, resolves a TikTok share link if needed, then commits. */
+            async function addLink(url) {
                 if (!JourneyToApi.isValidVideoUrl(url)) {
                     toast('Please paste a full video link (starting with https://).');
                     return null;
                 }
                 var platform = JourneyToApi.detectPlatform(url);
-                var link = { url: url, platformSlug: platform.slug, platformLabel: platform.label, isShort: isShortSection };
+                var finalUrl = url;
+                if (platform.slug === 'tiktok' && !/\/video\/\d+/.test(url)) {
+                    toast('Resolving TikTok link…');
+                    finalUrl = await resolveTikTokUrl(url);
+                }
+                return restoreLink({ url: finalUrl, platformSlug: platform.slug, platformLabel: platform.label, isShort: isShortSection });
+            }
+
+            /** Adds an already-known-good link with no validation/resolution — used to reconstruct an existing post's video list. */
+            function restoreLink(link) {
                 targetArray.push(link);
                 listEl.appendChild(videoRow(link, targetArray, listEl));
                 return link;
             }
 
-            addBtn.addEventListener('click', function () {
-                if (addLink(urlInput.value.trim())) urlInput.value = '';
+            addBtn.addEventListener('click', async function () {
+                var url = urlInput.value.trim();
+                if (await addLink(url)) urlInput.value = '';
+            });
+            // Paste the share-sheet link and it's added immediately — no
+            // extra tap needed. Typing is left alone so a URL isn't
+            // committed halfway through being entered.
+            urlInput.addEventListener('input', async function (e) {
+                if (e.inputType !== 'insertFromPaste') return;
+                var url = urlInput.value.trim();
+                if (await addLink(url)) urlInput.value = '';
             });
 
             var card = el('div', { class: 'card' }, [
@@ -593,7 +669,7 @@
                 el('p', { class: 'hint', text: hint }),
                 listEl,
             ]);
-            return { card: card, addLink: addLink };
+            return { card: card, addLink: addLink, restoreLink: restoreLink };
         }
 
         function videoRow(link, targetArray, listEl) {
@@ -606,6 +682,11 @@
             removeBtn.addEventListener('click', function () {
                 var idx = targetArray.indexOf(link);
                 if (idx >= 0) targetArray.splice(idx, 1);
+                // Recovered links are already embedded in the raw content —
+                // "remove" needs to actually strip that block, not just the row.
+                if (link.isExisting) {
+                    articleTextarea.value = JourneyToApi.removeBlockContaining(articleTextarea.value, 'data-jt-url="' + JourneyToApi.escapeHtml(link.url) + '"');
+                }
                 rowEl.remove();
             });
             return rowEl;
@@ -715,9 +796,17 @@
             saveBtn.textContent = 'Saving…';
 
             try {
+                // In EDIT mode, ed.images/shorts/longform hold both media recovered
+                // from the post's existing content (already embedded — must NOT be
+                // re-appended, or it'd be duplicated) and media added this session
+                // (isExisting is unset for those, and only those go to appendMedia).
                 var content = mode === 'CREATE'
                     ? JourneyToApi.composeContent(articleTextarea.value, ed.images, ed.shorts, ed.longform, ed.featuredImageId)
-                    : JourneyToApi.appendMedia(articleTextarea.value, ed.images, ed.shorts.concat(ed.longform));
+                    : JourneyToApi.appendMedia(
+                        articleTextarea.value,
+                        ed.images.filter(function (i) { return !i.isExisting; }),
+                        ed.shorts.concat(ed.longform).filter(function (v) { return !v.isExisting; })
+                    );
 
                 var body = {
                     title: title,
@@ -762,7 +851,8 @@
                 try {
                     var post = await JourneyToApi.getPost(postId);
                     titleInput.value = decodeEntities(post.title.raw || post.title.rendered);
-                    articleTextarea.value = post.content.raw || post.content.rendered;
+                    var rawContent = post.content.raw || post.content.rendered;
+                    articleTextarea.value = rawContent;
                     statusSelect.value = post.status;
                     if (post.status === 'publish' && post.link) {
                         viewLiveBtn.style.display = 'inline-flex';
@@ -774,6 +864,24 @@
                     // Re-render taxonomy selections now that ids are known (self-healing if
                     // loadTaxonomies() hasn't resolved yet — it re-renders again once it does).
                     refreshTaxonomyChips();
+
+                    // Rebuild the Photos grid and Shorts/Long-form lists from what's
+                    // already in the post — otherwise editing an existing post looks
+                    // like its media vanished, when it's just not being read back out.
+                    var recovered = JourneyToApi.parseExistingContent(rawContent);
+                    recovered.images.forEach(function (img) {
+                        img.isExisting = true;
+                        ed.images.push(img);
+                        renderImageTile(img);
+                    });
+                    recovered.shorts.forEach(function (link) {
+                        link.isExisting = true;
+                        shortsSection.restoreLink(link);
+                    });
+                    recovered.longform.forEach(function (link) {
+                        link.isExisting = true;
+                        longformSection.restoreLink(link);
+                    });
                 } catch (e) {
                     showError(e.message);
                 } finally {

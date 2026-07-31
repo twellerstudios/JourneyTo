@@ -273,10 +273,10 @@ var JourneyToApi = (function () {
         var portrait = !!video.isShort;
         if (video.platformSlug === 'youtube') {
             var ytId = youTubeId(video.url);
-            if (ytId) return htmlBlock(videoIframe('https://www.youtube.com/embed/' + ytId + '?rel=0', portrait ? 'portrait' : 'landscape', 'YouTube video'));
+            if (ytId) return htmlBlock(videoIframe('https://www.youtube.com/embed/' + ytId + '?rel=0', portrait ? 'portrait' : 'landscape', 'YouTube video', video));
         } else if (video.platformSlug === 'tiktok') {
             var ttId = tikTokId(video.url);
-            if (ttId) return htmlBlock(videoIframe('https://www.tiktok.com/embed/v2/' + ttId, 'tiktok', 'TikTok video'));
+            if (ttId) return htmlBlock(videoIframe('https://www.tiktok.com/embed/v2/' + ttId, 'tiktok', 'TikTok video', video));
         }
         return htmlBlock(watchCard(video));
     }
@@ -293,10 +293,17 @@ var JourneyToApi = (function () {
      * padding-percentage trick made its internal UI overflow and show a
      * scrollbar — `scrolling="no"` plus a size TikTok is actually
      * designed for avoids that instead of fighting it).
+     *
+     * `data-jt-url`/`data-jt-is-short` on the wrapper carry the original
+     * link and section back into the markup itself — with nowhere else to
+     * persist "this was a Shorts link" once it's saved as an iframe embed,
+     * this is what lets editing an existing post reconstruct the Shorts/
+     * Long-form lists instead of them just looking empty. See
+     * parseExistingContent().
      */
-    function videoIframe(src, shape, title) {
+    function videoIframe(src, shape, title, video) {
         var frameClass = 'jt-video-embed__frame jt-video-embed__frame--' + shape;
-        return '<div class="jt-video-embed"><div class="' + frameClass + '">' +
+        return '<div class="jt-video-embed" data-jt-url="' + escapeHtml(video.url) + '" data-jt-is-short="' + (!!video.isShort) + '"><div class="' + frameClass + '">' +
             '<iframe src="' + src + '" title="' + escapeHtml(title) + '" loading="lazy" scrolling="no" ' +
             'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
             'allowfullscreen></iframe></div></div>';
@@ -308,7 +315,7 @@ var JourneyToApi = (function () {
         var label = video.platformLabel || 'Video';
         var thumb = video.platformSlug === 'youtube' ? youTubeThumbnail(video.url) : null;
         var thumbStyle = thumb ? ' style="background-image:url(\'' + thumb + '\')"' : '';
-        return '<a class="jt-watch-card' + (thumb ? ' jt-watch-card--thumb' : '') + '" href="' + escapeHtml(video.url) + '" target="_blank" rel="noopener noreferrer"' + thumbStyle + '>' +
+        return '<a class="jt-watch-card' + (thumb ? ' jt-watch-card--thumb' : '') + '" href="' + escapeHtml(video.url) + '" data-jt-url="' + escapeHtml(video.url) + '" data-jt-is-short="' + (!!video.isShort) + '" target="_blank" rel="noopener noreferrer"' + thumbStyle + '>' +
             '<span class="jt-watch-card__play">' + PLAY_ICON + '</span>' +
             '<span class="jt-watch-card__text"><span class="jt-watch-card__label">Watch on ' + escapeHtml(label) + '</span>' +
             '<span class="jt-watch-card__title">' + escapeHtml(video.url) + '</span></span></a>';
@@ -318,12 +325,16 @@ var JourneyToApi = (function () {
      * Builds the full post_content string:
      *   1. Shorts (TikTok / YouTube Shorts) right at the top, above
      *      everything else — the highest-visibility slot, for channels
-     *      leading with short-form video.
+     *      leading with short-form video — if there's more than one Short,
+     *      only the first leads; the rest are woven through the article
+     *      the same way extra images are, so a second/third Short doesn't
+     *      just pile up in the same spot.
      *   2. A hero lead image (if any photos were attached).
-     *   3. Paragraph blocks with the remaining images dynamically woven
-     *      in, with any long-form video(s) inserted under a "Watch"
-     *      heading roughly halfway through the article rather than
-     *      buried at the very end.
+     *   3. Paragraph blocks with the remaining images and any long-form
+     *      video (each under its own "Watch" heading) dynamically woven
+     *      in and spread across the article — a single long-form video
+     *      naturally lands near the middle, several space themselves out
+     *      — rather than everything piling up at the very end.
      *
      * The hero is whichever image is starred as the featured image
      * (`heroMediaId`) — not simply the first one uploaded — since photos
@@ -341,39 +352,52 @@ var JourneyToApi = (function () {
 
         var blocks = [];
 
-        shorts.forEach(function (v) { blocks.push(videoBlock(v)); });
+        var leadShort = shorts.length > 0 ? shorts[0] : null;
+        var restShorts = shorts.slice(1);
+        if (leadShort) blocks.push(videoBlock(leadShort));
 
         var hero = (heroMediaId != null && images.find(function (i) { return i.mediaId === heroMediaId; })) || images[0] || null;
         var rest = images.filter(function (i) { return i !== hero; });
 
         if (hero) blocks.push(imageBlock(hero, true));
 
-        var slots = computeInsertionSlots(paragraphs.length, rest.length);
+        var imageSlots = computeInsertionSlots(paragraphs.length, rest.length);
         var imagesBySlot = {};
         rest.forEach(function (img, i) {
-            var slot = slots[i];
+            var slot = imageSlots[i];
             if (!imagesBySlot[slot]) imagesBySlot[slot] = [];
             imagesBySlot[slot].push(img);
         });
 
-        var midpoint = Math.floor(paragraphs.length / 2);
+        // Extra Shorts (beyond the lead one) and every long-form video share
+        // the same "spread evenly through the paragraphs" placement images use.
+        var mediaQueue = restShorts.map(function (v) { return { video: v, heading: false }; })
+            .concat(longform.map(function (v) { return { video: v, heading: true }; }));
+        var mediaSlots = computeInsertionSlots(paragraphs.length, mediaQueue.length);
+        var mediaBySlot = {};
+        mediaQueue.forEach(function (m, i) {
+            var slot = mediaSlots[i];
+            if (!mediaBySlot[slot]) mediaBySlot[slot] = [];
+            mediaBySlot[slot].push(m);
+        });
+
         paragraphs.forEach(function (item, index) {
             blocks.push(blockForParagraph(item));
             if (imagesBySlot[index]) imagesBySlot[index].forEach(function (img) { blocks.push(imageBlock(img, false)); });
-            if (longform.length > 0 && index === midpoint) {
-                blocks.push(headingBlock('Watch'));
-                longform.forEach(function (v) { blocks.push(videoBlock(v)); });
-            }
+            if (mediaBySlot[index]) mediaBySlot[index].forEach(function (m) {
+                if (m.heading) blocks.push(headingBlock('Watch'));
+                blocks.push(videoBlock(m.video));
+            });
         });
 
-        // Paragraph-less articles still get their remaining images appended in order,
-        // and long-form video has no "middle" to land in, so it goes at the end.
+        // Paragraph-less articles have no "spread through" to speak of —
+        // everything still attached just gets appended in order.
         if (paragraphs.length === 0) {
             rest.forEach(function (img) { blocks.push(imageBlock(img, false)); });
-            if (longform.length > 0) {
-                blocks.push(headingBlock('Watch'));
-                longform.forEach(function (v) { blocks.push(videoBlock(v)); });
-            }
+            mediaQueue.forEach(function (m) {
+                if (m.heading) blocks.push(headingBlock('Watch'));
+                blocks.push(videoBlock(m.video));
+            });
         }
 
         return blocks.join('\n\n');
@@ -398,6 +422,62 @@ var JourneyToApi = (function () {
         if (additions.length === 0) return existingContent;
         if (!existingContent || !existingContent.trim()) return additions.join('\n\n');
         return existingContent.replace(/\s+$/, '') + '\n\n' + additions.join('\n\n');
+    }
+
+    /**
+     * Reconstructs the images/shorts/long-form video the editor's Photos
+     * and video sections should show for an existing post — otherwise
+     * opening a published post for editing looks like all its media
+     * vanished, when really it's just sitting in the raw content with
+     * nothing reading it back out. Images are recovered from the
+     * `wp-image-{id}` class every generated `<img>` carries; videos from
+     * the `data-jt-url`/`data-jt-is-short` attributes videoBlock() stamps
+     * on its wrapper. Anything not generated by this app (hand-written
+     * blocks, a wp:embed from before this existed) is simply not picked up
+     * — the raw content itself is left completely untouched either way.
+     */
+    function parseExistingContent(html) {
+        var images = [];
+        var shorts = [];
+        var longform = [];
+        if (!html || typeof DOMParser === 'undefined') return { images: images, shorts: shorts, longform: longform };
+        try {
+            var doc = new DOMParser().parseFromString(html, 'text/html');
+            doc.querySelectorAll('img[class*="wp-image-"]').forEach(function (img) {
+                var m = /wp-image-(\d+)/.exec(img.getAttribute('class') || '');
+                if (!m) return;
+                images.push({ mediaId: parseInt(m[1], 10), url: img.getAttribute('src') || '', altText: img.getAttribute('alt') || '' });
+            });
+            doc.querySelectorAll('[data-jt-url]').forEach(function (node) {
+                var url = node.getAttribute('data-jt-url');
+                if (!url) return;
+                var isShort = node.getAttribute('data-jt-is-short') === 'true';
+                var platform = detectPlatform(url);
+                var link = { url: url, platformSlug: platform.slug, platformLabel: platform.label, isShort: isShort };
+                (isShort ? shorts : longform).push(link);
+            });
+        } catch (e) {}
+        return { images: images, shorts: shorts, longform: longform };
+    }
+
+    /**
+     * Removes the single `<!-- wp:type {...} --> … <!-- /wp:type -->`
+     * block that contains `marker` (e.g. `wp-image-123` or a video's
+     * `data-jt-url="…"`) from raw post content — used when the user
+     * removes a photo/video the editor recovered via parseExistingContent,
+     * so "remove" actually removes it from the post rather than just from
+     * the preview grid.
+     */
+    function removeBlockContaining(content, marker) {
+        if (!content || !marker) return content;
+        var blockRegex = /<!--\s*wp:[a-z0-9\/-]+(?:\s+\{[^}]*\})?\s*-->[\s\S]*?<!--\s*\/wp:[a-z0-9\/-]+\s*-->/g;
+        var match;
+        while ((match = blockRegex.exec(content)) !== null) {
+            if (match[0].indexOf(marker) !== -1) {
+                return (content.slice(0, match.index) + content.slice(match.index + match[0].length)).replace(/\n{3,}/g, '\n\n').trim();
+            }
+        }
+        return content;
     }
 
     // ── Video link parsing ──────────────────────────────────────
@@ -512,10 +592,13 @@ var JourneyToApi = (function () {
         getSiteInfo: getSiteInfo,
         composeContent: composeContent,
         appendMedia: appendMedia,
+        parseExistingContent: parseExistingContent,
+        removeBlockContaining: removeBlockContaining,
         detectPlatform: detectPlatform,
         looksLikeShort: looksLikeShort,
         isValidVideoUrl: isValidVideoUrl,
         youTubeThumbnail: youTubeThumbnail,
         parseImportedPost: parseImportedPost,
+        escapeHtml: escapeHtml,
     };
 })();

@@ -22,15 +22,27 @@ wp-admin afterwards.
   whole pre-built **Post File** — see below), attach photos, and the app
   weaves them into the article at evenly-spaced points automatically —
   the first photo becomes a full-bleed hero image, the rest are spaced
-  through the paragraphs.
-- **Add video**: paste a TikTok or YouTube Shorts link into "Shorts", or a
-  full YouTube video link into "Long-form". These are inserted as direct
-  `youtube.com/embed` / `tiktok.com/embed` iframes (not WordPress's oEmbed
-  block — oEmbed discovery to TikTok is unreliable on shared hosting, so
-  embedding directly is what actually renders reliably). Shorts are placed
-  right after the post title — the highest-visibility spot — and long-form
-  video lands roughly halfway through the article under a "Watch" heading,
-  rather than at the very end.
+  through the paragraphs. Photos can also be added by pasting an image
+  URL directly ("Add via URL" in the Photos section), not just picked
+  from the device.
+- **Add video**: just paste a TikTok share link, a TikTok/YouTube Shorts
+  link, or a full YouTube link into "Shorts"/"Long-form" — it's added the
+  moment you paste, no extra tap needed (typing is left alone, so a link
+  isn't added halfway through being entered; there's still an Add button
+  for that case). A TikTok share-sheet link (`vm.tiktok.com/…`) is
+  automatically resolved to the canonical link the embed needs. These are
+  inserted as direct `youtube.com/embed` / `tiktok.com/embed` iframes (not
+  WordPress's oEmbed block — oEmbed discovery to TikTok is unreliable on
+  shared hosting, so embedding directly is what actually renders
+  reliably). The first Shorts link leads right after the post title — the
+  highest-visibility spot — everything else (more Shorts, long-form video)
+  is spread through the article the same way extra photos are, each
+  long-form video under its own "Watch" heading, rather than piling up in
+  one spot or at the very end.
+- **Editing an existing post** rebuilds the Photos grid and Shorts/
+  Long-form lists from what's already in the post, so its media doesn't
+  just disappear from the editor — removing a recovered photo or video
+  here actually removes it from the post, not just the preview.
 - **Categories, tags, featured image, draft/publish/pending/scheduled** —
   all standard WordPress fields, with inline "add new" for categories/tags.
 - **Manage posts**: search, filter by status, edit, and delete — reading
@@ -99,6 +111,13 @@ cd mobile
 npm install
 npm start          # opens http://localhost:8100
 ```
+
+Resolving a shortened TikTok share link (`vm.tiktok.com/…`) needs
+Capacitor's native HTTP layer, which only exists in the built Android app
+— a browser's `fetch()` can't follow that redirect cross-origin. In the
+browser preview, a shortened link is just kept as-is and posts fine, it
+just renders as a "Watch on TikTok" card instead of an inline player;
+build the app to get the actual embed.
 
 ## Build the Android app (APK)
 
