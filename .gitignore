@@ -1,4 +1,4 @@
-# Android
+# Android (native app)
 android-app/.gradle/
 android-app/local.properties
 android-app/**/build/
@@ -6,6 +6,12 @@ android-app/.idea/
 android-app/*.iml
 android-app/captures/
 android-app/.cxx/
+
+# Mobile (Capacitor app)
+mobile/node_modules/
+mobile/android/
+mobile/.idea/
+mobile/*.iml
 
 # OS
 .DS_Store

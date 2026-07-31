@@ -1,17 +1,26 @@
 # Journey To Poster
 
-A native Android app for creating, editing and publishing posts to
+An Android app for creating, editing and publishing posts to
 [letsjourneyto.com](https://letsjourneyto.com) on WordPress, plus the small
-WordPress plugin it depends on.
+WordPress plugin it depends on. There are two implementations of the same
+app — pick whichever build toolchain you'd rather use:
+
+- **`mobile/`** — Capacitor (HTML/CSS/JS wrapped in a native shell).
+  Builds with plain Android Studio + Java/Gradle, no Kotlin/Compose plugin
+  wrangling. **This is the actively maintained version** — see
+  `mobile/README.md` for details.
+- **`android-app/`** — native Kotlin + Jetpack Compose. Kept for reference.
+
+Both talk **directly to WordPress's own REST API** (`wp/v2/posts`,
+`wp/v2/media`, `wp/v2/categories`, `wp/v2/tags`) using an Application
+Password — there's no server in between, and posts stay 100% native
+WordPress content (Gutenberg blocks), fully editable from wp-admin
+afterwards.
 
 ## `android-app/`
 
 A Kotlin + Jetpack Compose app (Material 3, Stripe-inspired UI, white
-background with blue/green brand accents) that talks **directly to
-WordPress's own REST API** (`wp/v2/posts`, `wp/v2/media`,
-`wp/v2/categories`, `wp/v2/tags`) using an Application Password — there's
-no server in between, and posts stay 100% native WordPress content
-(Gutenberg blocks), fully editable from wp-admin afterwards.
+background with blue/green brand accents).
 
 What it does:
 
