@@ -119,7 +119,7 @@
     }
 
     function iconSvg(pathD, extra) {
-        return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + pathD + (extra || '') + '</svg>';
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + pathD + (extra || '') + '</svg>';
     }
 
     var ICONS = {
@@ -375,8 +375,11 @@
         backBtn.addEventListener('click', function () { setActiveTab('posts'); renderPosts(); });
 
         var titleH = el('h1', { text: mode === 'CREATE' ? 'New Post' : 'Edit Post' });
+        var viewLiveBtn = el('button', { class: 'btn btn-icon btn-ghost', html: ICONS.external, title: 'View live' });
+        viewLiveBtn.style.display = 'none';
         view.appendChild(el('div', { class: 'topbar' }, [
             el('div', { class: 'brand', style: 'gap:4px' }, [backBtn, titleH]),
+            viewLiveBtn,
         ]));
 
         var errorSlot = el('div');
@@ -663,6 +666,10 @@
                     titleInput.value = decodeEntities(post.title.raw || post.title.rendered);
                     articleTextarea.value = post.content.raw || post.content.rendered;
                     statusSelect.value = post.status;
+                    if (post.status === 'publish' && post.link) {
+                        viewLiveBtn.style.display = 'inline-flex';
+                        viewLiveBtn.addEventListener('click', function () { openExternal(post.link); });
+                    }
                     ed.featuredImageId = post.featured_media > 0 ? post.featured_media : null;
                     ed.selectedCategoryIds = (post.categories || []).slice();
                     ed.selectedTagIds = (post.tags || []).slice();
