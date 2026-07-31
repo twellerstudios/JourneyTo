@@ -715,10 +715,9 @@
             saveBtn.textContent = 'Saving…';
 
             try {
-                var allVideos = ed.shorts.concat(ed.longform);
                 var content = mode === 'CREATE'
-                    ? JourneyToApi.composeContent(articleTextarea.value, ed.images, allVideos, ed.featuredImageId)
-                    : JourneyToApi.appendMedia(articleTextarea.value, ed.images, allVideos);
+                    ? JourneyToApi.composeContent(articleTextarea.value, ed.images, ed.shorts, ed.longform, ed.featuredImageId)
+                    : JourneyToApi.appendMedia(articleTextarea.value, ed.images, ed.shorts.concat(ed.longform));
 
                 var body = {
                     title: title,

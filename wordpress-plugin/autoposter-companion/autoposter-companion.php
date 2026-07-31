@@ -3,7 +3,7 @@
  * Plugin Name: AutoPoster Companion
  * Plugin URI: https://letsjourneyto.com
  * Description: Companion plugin for the Journey To Poster Android app. Adds a social links settings page and a small REST endpoint the app uses to show your "Follow us" icons — everything else (posts, media, categories, tags) is managed through WordPress's own REST API.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Journey To
  * License: GPL-2.0-or-later
  * Text Domain: autoposter-companion
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AUTOPOSTER_COMPANION_VERSION', '1.1.0');
+define('AUTOPOSTER_COMPANION_VERSION', '1.2.0');
 define('AUTOPOSTER_COMPANION_DIR', plugin_dir_path(__FILE__));
 define('AUTOPOSTER_COMPANION_URL', plugin_dir_url(__FILE__));
 

@@ -237,10 +237,10 @@ var JourneyToApi = (function () {
         var portrait = !!video.isShort;
         if (video.platformSlug === 'youtube') {
             var ytId = youTubeId(video.url);
-            if (ytId) return htmlBlock(videoIframe('https://www.youtube.com/embed/' + ytId + '?rel=0', portrait, 'YouTube video'));
+            if (ytId) return htmlBlock(videoIframe('https://www.youtube.com/embed/' + ytId + '?rel=0', portrait ? 'portrait' : 'landscape', 'YouTube video'));
         } else if (video.platformSlug === 'tiktok') {
             var ttId = tikTokId(video.url);
-            if (ttId) return htmlBlock(videoIframe('https://www.tiktok.com/embed/v2/' + ttId, true, 'TikTok video'));
+            if (ttId) return htmlBlock(videoIframe('https://www.tiktok.com/embed/v2/' + ttId, 'tiktok', 'TikTok video'));
         }
         return htmlBlock(watchCard(video));
     }
@@ -249,10 +249,19 @@ var JourneyToApi = (function () {
         return '<!-- wp:html -->\n' + innerHtml + '\n<!-- /wp:html -->';
     }
 
-    function videoIframe(src, portrait, title) {
-        var frameClass = 'jt-video-embed__frame' + (portrait ? ' jt-video-embed__frame--portrait' : '');
+    /**
+     * `shape` is 'landscape' (16:9, YouTube long-form), 'portrait' (9:16,
+     * YouTube Shorts — the player scales cleanly to any box) or 'tiktok'
+     * (a fixed-size box matching TikTok's own embed proportions, since
+     * forcing their player into an arbitrary aspect ratio via the usual
+     * padding-percentage trick made its internal UI overflow and show a
+     * scrollbar — `scrolling="no"` plus a size TikTok is actually
+     * designed for avoids that instead of fighting it).
+     */
+    function videoIframe(src, shape, title) {
+        var frameClass = 'jt-video-embed__frame jt-video-embed__frame--' + shape;
         return '<div class="jt-video-embed"><div class="' + frameClass + '">' +
-            '<iframe src="' + src + '" title="' + escapeHtml(title) + '" loading="lazy" ' +
+            '<iframe src="' + src + '" title="' + escapeHtml(title) + '" loading="lazy" scrolling="no" ' +
             'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
             'allowfullscreen></iframe></div></div>';
     }
@@ -270,9 +279,15 @@ var JourneyToApi = (function () {
     }
 
     /**
-     * Builds the full post_content string: a hero lead image (if any photos
-     * were attached), paragraph blocks with the remaining images dynamically
-     * woven in, followed by a "Watch" section for any video links.
+     * Builds the full post_content string:
+     *   1. Shorts (TikTok / YouTube Shorts) right at the top, above
+     *      everything else — the highest-visibility slot, for channels
+     *      leading with short-form video.
+     *   2. A hero lead image (if any photos were attached).
+     *   3. Paragraph blocks with the remaining images dynamically woven
+     *      in, with any long-form video(s) inserted under a "Watch"
+     *      heading roughly halfway through the article rather than
+     *      buried at the very end.
      *
      * The hero is whichever image is starred as the featured image
      * (`heroMediaId`) — not simply the first one uploaded — since photos
@@ -281,13 +296,17 @@ var JourneyToApi = (function () {
      * necessarily match which one should lead the article. Falls back to
      * the first image if nothing is starred.
      */
-    function composeContent(articleText, images, videos, heroMediaId) {
+    function composeContent(articleText, images, shorts, longform, heroMediaId) {
         images = images || [];
-        videos = videos || [];
+        shorts = shorts || [];
+        longform = longform || [];
         var paragraphs = splitParagraphs(articleText);
-        if (paragraphs.length === 0 && images.length === 0 && videos.length === 0) return '';
+        if (paragraphs.length === 0 && images.length === 0 && shorts.length === 0 && longform.length === 0) return '';
 
         var blocks = [];
+
+        shorts.forEach(function (v) { blocks.push(videoBlock(v)); });
+
         var hero = (heroMediaId != null && images.find(function (i) { return i.mediaId === heroMediaId; })) || images[0] || null;
         var rest = images.filter(function (i) { return i !== hero; });
 
@@ -301,19 +320,24 @@ var JourneyToApi = (function () {
             imagesBySlot[slot].push(img);
         });
 
+        var midpoint = Math.floor(paragraphs.length / 2);
         paragraphs.forEach(function (p, index) {
             blocks.push(paragraphBlock(p));
             if (imagesBySlot[index]) imagesBySlot[index].forEach(function (img) { blocks.push(imageBlock(img, false)); });
+            if (longform.length > 0 && index === midpoint) {
+                blocks.push(headingBlock('Watch'));
+                longform.forEach(function (v) { blocks.push(videoBlock(v)); });
+            }
         });
 
-        // Paragraph-less articles still get their remaining images appended in order.
+        // Paragraph-less articles still get their remaining images appended in order,
+        // and long-form video has no "middle" to land in, so it goes at the end.
         if (paragraphs.length === 0) {
             rest.forEach(function (img) { blocks.push(imageBlock(img, false)); });
-        }
-
-        if (videos.length > 0) {
-            blocks.push(headingBlock('Watch'));
-            videos.forEach(function (v) { blocks.push(videoBlock(v)); });
+            if (longform.length > 0) {
+                blocks.push(headingBlock('Watch'));
+                longform.forEach(function (v) { blocks.push(videoBlock(v)); });
+            }
         }
 
         return blocks.join('\n\n');

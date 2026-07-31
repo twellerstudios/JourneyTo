@@ -109,19 +109,36 @@ article .jt-hero-image img {
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
 }
 
-.jt-video-embed__frame::before {
+/* YouTube long-form: standard responsive 16:9 — the player scales cleanly
+   to whatever box it's given. */
+.jt-video-embed__frame--landscape::before {
     content: "";
     display: block;
-    padding-top: 56.25%; /* 16:9 */
+    padding-top: 56.25%;
 }
 
+/* YouTube Shorts: same trick at 9:16 — also scales cleanly. */
 .jt-video-embed__frame--portrait {
     max-width: 360px;
     margin: 0 auto;
 }
 
 .jt-video-embed__frame--portrait::before {
-    padding-top: 177.78%; /* 9:16 */
+    content: "";
+    display: block;
+    padding-top: 177.78%;
+}
+
+/* TikTok: a fixed box sized to match TikTok's own embed proportions
+   instead of the padding-percentage trick. Forcing their player into an
+   arbitrary aspect ratio made its internal UI (caption, likes, etc.)
+   taller than the box, which is what was showing up as a confusing
+   scrollbar inside the video. A size TikTok is actually designed for,
+   plus scrolling="no" on the iframe itself, avoids that outright. */
+.jt-video-embed__frame--tiktok {
+    max-width: 325px;
+    height: 737px;
+    margin: 0 auto;
 }
 
 .jt-video-embed__frame iframe {
@@ -130,6 +147,7 @@ article .jt-hero-image img {
     width: 100%;
     height: 100%;
     border: 0;
+    overflow: hidden;
 }
 
 /* Fallback "Watch on X" card — used when a video id can't be read

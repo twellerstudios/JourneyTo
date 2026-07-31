@@ -4,7 +4,7 @@ Tags: rest-api, mobile app, social links
 Requires at least: 5.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,14 @@ Yes — WordPress Application Passwords, which the app uses to authenticate,
 require an HTTPS connection (or a recognized local development URL).
 
 == Changelog ==
+
+= 1.2.0 =
+* Fix TikTok embeds showing an internal scrollbar — the player now gets a
+  fixed box matching TikTok's own embed proportions instead of being
+  force-fit into an arbitrary aspect ratio.
+* New posts now lead with any Shorts/TikTok video right after the title
+  (for channels prioritizing short-form views), with long-form video
+  placed roughly halfway through the article instead of at the very end.
 
 = 1.1.0 =
 * Frontend styling overhaul: full-text-width images with a distinct hero

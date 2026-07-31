@@ -27,7 +27,10 @@ wp-admin afterwards.
   full YouTube video link into "Long-form". These are inserted as direct
   `youtube.com/embed` / `tiktok.com/embed` iframes (not WordPress's oEmbed
   block — oEmbed discovery to TikTok is unreliable on shared hosting, so
-  embedding directly is what actually renders reliably).
+  embedding directly is what actually renders reliably). Shorts are placed
+  right after the post title — the highest-visibility spot — and long-form
+  video lands roughly halfway through the article under a "Watch" heading,
+  rather than at the very end.
 - **Categories, tags, featured image, draft/publish/pending/scheduled** —
   all standard WordPress fields, with inline "add new" for categories/tags.
 - **Manage posts**: search, filter by status, edit, and delete — reading
