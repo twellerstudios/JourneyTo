@@ -1,0 +1,924 @@
+<!-- wp:html -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+.nmagv{
+  position:relative; box-sizing:border-box; overflow-x:hidden;
+  width:100vw; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);
+}
+.nmagv *{ box-sizing:border-box; }
+.nmagv img{ display:block; max-width:100%; height:auto; border:0; }
+/* ============================================================
+   NMAG Virtual — National Museum & Art Gallery of Trinidad & Tobago
+   Concept demo by Tweller Studios
+   Committed single-theme (darkened gallery). Every colour explicit.
+   ============================================================ */
+
+.nmagv{
+  --ink:        #080B0F;
+  --ink-1:      #0D1218;
+  --ink-2:      #141C24;
+  --ink-3:      #1B2530;
+  --line:       #24303B;
+  --line-soft:  #17202A;
+  --bone:       #ECE7DC;
+  --bone-2:     #A5AEB7;
+  --bone-3:     #6C7883;
+  --verm:       #D64027;
+  --verm-lit:   #F06A4E;
+  --brass:      #C9A227;
+  --focus:      #7FD1E8;
+
+  --wrap: 1240px;
+  --gut: clamp(20px, 5vw, 64px);
+
+  --f-display: "Bodoni Moda", "Didot", "Times New Roman", serif;
+  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --step--1: clamp(0.76rem, 0.74rem + 0.1vw, 0.82rem);
+  --step-0:  clamp(0.95rem, 0.92rem + 0.15vw, 1.03rem);
+  --step-1:  clamp(1.12rem, 1.05rem + 0.35vw, 1.32rem);
+  --step-2:  clamp(1.45rem, 1.28rem + 0.85vw, 2.05rem);
+  --step-3:  clamp(1.95rem, 1.6rem + 1.75vw, 3.1rem);
+  --step-4:  clamp(2.5rem, 1.95rem + 2.75vw, 4.6rem);
+}.nmagv *, .nmagv *::before, .nmagv *::after{ box-sizing:border-box; }.nmagv{
+  margin:0;
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--f-body);
+  font-size:var(--step-0);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}.nmagv h1, .nmagv h2, .nmagv h3, .nmagv h4{ margin:0; font-family:var(--f-display); font-weight:400; text-wrap:balance; line-height:1.06; letter-spacing:-0.012em; }.nmagv p{ margin:0; }.nmagv a{ color:inherit; }.nmagv img{ display:block; max-width:100%; }.nmagv button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }.nmagv :focus-visible{ outline:2px solid var(--focus); outline-offset:3px; border-radius:2px; }.nmagv .nv-wrap{ width:100%; max-width:var(--wrap); margin-inline:auto; padding-inline:var(--gut); }
+
+/* --- shared atoms ------------------------------------------------ */
+.nmagv .nv-eyebrow{
+  font-family:var(--f-mono); font-size:var(--step--1);
+  letter-spacing:0.16em; text-transform:uppercase; color:var(--bone-3);
+  margin:0;
+}.nmagv .nv-eyebrow .nv-tick{ color:var(--verm); }.nmagv .nv-rule{ height:1px; background:var(--line-soft); border:0; margin:0; }.nmagv .nv-lede{ color:var(--bone-2); font-size:var(--step-1); line-height:1.55; max-width:62ch; }.nmagv .nv-chip{
+  display:inline-flex; align-items:center; gap:.5em;
+  font-family:var(--f-mono); font-size:var(--step--1); letter-spacing:.08em;
+  text-transform:uppercase; color:var(--bone-2);
+  border:1px solid var(--line); border-radius:999px;
+  padding:.42em .9em; background:rgba(20,28,36,.6);
+}.nmagv .nv-chip--demo{ color:var(--verm-lit); border-color:rgba(214,64,39,.45); background:rgba(214,64,39,.09); }.nmagv .nv-btn{
+  display:inline-flex; align-items:center; gap:.6em;
+  font-family:var(--f-body); font-weight:600; font-size:var(--step-0);
+  padding:.82em 1.5em; border-radius:2px; text-decoration:none;
+  border:1px solid transparent; transition:background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}.nmagv .nv-btn--solid{ background:var(--verm); color:#fff; }.nmagv .nv-btn--solid:hover{ background:var(--verm-lit); transform:translateY(-1px); }.nmagv .nv-btn--ghost{ border-color:var(--line); color:var(--bone); }.nmagv .nv-btn--ghost:hover{ border-color:var(--bone-3); background:rgba(236,231,220,.05); }.nmagv .nv-arrow{ display:inline-block; transition:transform .18s ease; }.nmagv .nv-btn:hover .nv-arrow{ transform:translateX(3px); }
+
+/* --- masthead ---------------------------------------------------- */
+.nmagv .nv-masthead{
+  position:sticky; top:0; z-index:60;
+  background:rgba(8,11,15,.86); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}.nmagv .nv-masthead__in{
+  display:flex; align-items:center; gap:clamp(14px,3vw,34px);
+  height:64px;
+}.nmagv .nv-mark{ display:flex; align-items:baseline; gap:.6em; text-decoration:none; margin-right:auto; }.nmagv .nv-mark__n{ font-family:var(--f-display); font-size:1.34rem; letter-spacing:.02em; }.nmagv .nv-mark__s{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--bone-3); }.nmagv .nv-mnav{ display:flex; gap:clamp(14px,2vw,26px); }.nmagv .nv-mnav a{
+  font-size:.86rem; text-decoration:none; color:var(--bone-2);
+  padding-block:.35em; border-bottom:1px solid transparent; transition:color .16s ease, border-color .16s ease;
+}.nmagv .nv-mnav a:hover{ color:var(--bone); border-bottom-color:var(--verm); }@media (max-width:860px){.nmagv .nv-mnav{ display:none; } }@media (max-width:520px){.nmagv .nv-masthead__in .nv-chip--demo{ display:none; } }
+
+/* --- hero -------------------------------------------------------- */
+.nmagv .nv-hero{ position:relative; isolation:isolate; border-bottom:1px solid var(--line-soft); }.nmagv .nv-hero__media{ position:absolute; inset:0; z-index:-2; overflow:hidden; }.nmagv .nv-hero__media img{ width:100%; height:100%; object-fit:cover; opacity:.5; transform:scale(1.06); animation:nv-drift 34s ease-in-out infinite alternate; }@keyframes nv-drift{ from{ transform:scale(1.06) translate3d(0,0,0); } to{ transform:scale(1.14) translate3d(-1.6%,-1.4%,0); } }.nmagv .nv-hero::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:
+    radial-gradient(120% 90% at 18% 15%, rgba(8,11,15,.42) 0%, rgba(8,11,15,.9) 62%, var(--ink) 100%),
+    linear-gradient(to bottom, rgba(8,11,15,.55), rgba(8,11,15,.2) 40%, var(--ink) 96%);
+}.nmagv .nv-hero__in{ padding-block:clamp(48px,8vh,88px) clamp(40px,6vh,64px); display:grid; gap:clamp(20px,3vh,30px); }.nmagv .nv-hero h1{ font-size:var(--step-4); max-width:22ch; }.nmagv .nv-hero h1 em{ font-style:italic; color:var(--brass); }.nmagv .nv-hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }.nmagv .nv-hero__facts{ display:flex; flex-wrap:wrap; gap:10px; padding-top:6px; }
+
+/* --- section frame ----------------------------------------------- */
+.nmagv .nv-sec{ padding-block:clamp(58px,9vh,108px); }.nmagv .nv-sec--tight{ padding-block:clamp(40px,6vh,72px); }.nmagv .nv-sec__head{ display:grid; gap:14px; margin-bottom:clamp(28px,4.5vh,48px); }.nmagv .nv-sec__head h2{ font-size:var(--step-3); max-width:20ch; }.nmagv .nv-sec--alt{ background:var(--ink-1); border-block:1px solid var(--line-soft); }
+
+/* --- the tour ---------------------------------------------------- */
+.nmagv .nv-roomnav{
+  display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:18px;
+  scrollbar-width:thin; scrollbar-color:var(--line) transparent;
+}.nmagv .nv-roomnav::-webkit-scrollbar{ height:5px; }.nmagv .nv-roomnav::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }.nmagv .nv-roomtab{
+  flex:0 0 auto; display:flex; flex-direction:column; gap:2px; align-items:flex-start;
+  padding:.6em 1em; border:1px solid var(--line-soft); border-radius:2px;
+  background:var(--ink-1); transition:border-color .18s ease, background .18s ease;
+}.nmagv .nv-roomtab:hover{ border-color:var(--bone-3); }.nmagv .nv-roomtab__c{ font-family:var(--f-mono); font-size:.62rem; letter-spacing:.16em; color:var(--bone-3); }.nmagv .nv-roomtab__n{ font-size:.88rem; font-weight:500; white-space:nowrap; color:var(--bone-2); }.nmagv .nv-roomtab[aria-selected="true"]{ background:var(--ink-2); border-color:var(--verm); }.nmagv .nv-roomtab[aria-selected="true"] .nv-roomtab__n{ color:var(--bone); }.nmagv .nv-roomtab[aria-selected="true"] .nv-roomtab__c{ color:var(--verm-lit); }.nmagv .nv-stage{ display:grid; grid-template-columns:minmax(0,1.62fr) minmax(0,1fr); gap:clamp(18px,2.4vw,30px); align-items:start; }@media (max-width:940px){.nmagv .nv-stage{ grid-template-columns:1fr; } }
+
+/* panorama */
+.nmagv .nv-pano{
+  position:relative; overflow:hidden; background:var(--ink-2);
+  border:1px solid var(--line); border-radius:2px;
+  height:clamp(340px,54vh,588px);
+  cursor:grab; touch-action:pan-y; user-select:none;
+}.nmagv .nv-pano.nv-is-drag{ cursor:grabbing; }.nmagv .nv-pano__track{ position:absolute; top:0; left:0; height:100%; will-change:transform; }.nmagv .nv-pano__track img{ height:100%; width:auto; max-width:none; object-fit:cover; pointer-events:none; }.nmagv .nv-pano__vig{ position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(88% 74% at 50% 46%, transparent 40%, rgba(8,11,15,.72) 100%); }.nmagv .nv-hot{
+  position:absolute; transform:translate(-50%,-50%); z-index:3;
+  width:34px; height:34px; border-radius:50%;
+  display:grid; place-items:center;
+  font-family:var(--f-mono); font-size:.74rem; color:#fff;
+  background:rgba(214,64,39,.9); border:1.5px solid rgba(255,255,255,.85);
+  box-shadow:0 0 0 0 rgba(214,64,39,.55);
+  transition:transform .16s ease, background .16s ease;
+  animation:nv-ping 2.8s ease-out infinite;
+}.nmagv .nv-hot:hover{ transform:translate(-50%,-50%) scale(1.16); background:var(--verm-lit); }@keyframes nv-ping{
+  0%{ box-shadow:0 0 0 0 rgba(214,64,39,.5); }
+  70%{ box-shadow:0 0 0 15px rgba(214,64,39,0); }
+  100%{ box-shadow:0 0 0 0 rgba(214,64,39,0); }
+}.nmagv .nv-pano__hint{
+  position:absolute; left:50%; bottom:16px; transform:translateX(-50%); z-index:4;
+  display:flex; align-items:center; gap:.55em; pointer-events:none;
+  font-family:var(--f-mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--bone-2); background:rgba(8,11,15,.7); border:1px solid var(--line);
+  padding:.5em .95em; border-radius:999px; transition:opacity .5s ease;
+}.nmagv .nv-pano__hint.nv-is-gone{ opacity:0; }.nmagv .nv-pano__scan{
+  position:absolute; right:12px; top:12px; z-index:4;
+  font-family:var(--f-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--bone-3); background:rgba(8,11,15,.62); border:1px solid var(--line-soft);
+  padding:.4em .7em; border-radius:2px;
+}
+
+/* room label card */
+.nmagv .nv-label{ border:1px solid var(--line); background:var(--ink-1); border-radius:2px; padding:clamp(20px,2.4vw,28px); display:grid; gap:16px; }.nmagv .nv-label__code{ display:flex; align-items:center; justify-content:space-between; gap:12px; }.nmagv .nv-label__code span:first-child{ font-family:var(--f-mono); font-size:.68rem; letter-spacing:.2em; color:var(--brass); }.nmagv .nv-label__code span:last-child{ font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; color:var(--bone-3); }.nmagv .nv-label h3{ font-size:var(--step-2); }.nmagv .nv-label p{ color:var(--bone-2); font-size:.94rem; line-height:1.65; }.nmagv .nv-label__objs{ display:grid; gap:2px; border-top:1px solid var(--line-soft); padding-top:14px; }.nmagv .nv-label__objs > .nv-eyebrow{ margin-bottom:6px; }.nmagv .nv-objline{
+  display:flex; align-items:center; gap:12px; width:100%; text-align:left;
+  padding:.6em 0; border-bottom:1px solid var(--line-soft);
+  transition:padding-left .18s ease, color .18s ease;
+}.nmagv .nv-objline:last-child{ border-bottom:0; }.nmagv .nv-objline:hover{ padding-left:6px; }.nmagv .nv-objline__n{ font-family:var(--f-mono); font-size:.7rem; color:var(--verm-lit); width:1.4em; flex:0 0 auto; }.nmagv .nv-objline__t{ font-size:.9rem; color:var(--bone-2); }.nmagv .nv-objline:hover .nv-objline__t{ color:var(--bone); }
+
+/* --- collection grid --------------------------------------------- */
+.nmagv .nv-filters{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }.nmagv .nv-filt{
+  font-family:var(--f-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--bone-3); border:1px solid var(--line-soft); border-radius:999px; padding:.5em 1em;
+  transition:color .16s ease, border-color .16s ease, background .16s ease;
+}.nmagv .nv-filt:hover{ color:var(--bone-2); border-color:var(--bone-3); }.nmagv .nv-filt[aria-pressed="true"]{ color:var(--ink); background:var(--bone); border-color:var(--bone); }.nmagv .nv-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:clamp(12px,1.6vw,20px); }.nmagv .nv-card{ display:grid; gap:0; text-align:left; border:1px solid var(--line-soft); background:var(--ink-1); border-radius:2px; overflow:hidden; transition:border-color .2s ease, transform .2s ease; }.nmagv .nv-card:hover{ border-color:var(--bone-3); transform:translateY(-3px); }.nmagv .nv-card__fig{ position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--ink-2); }.nmagv .nv-card__fig img{ width:100%; height:100%; object-fit:cover; transition:transform .5s cubic-bezier(.2,.7,.3,1); }.nmagv .nv-card:hover .nv-card__fig img{ transform:scale(1.055); }.nmagv .nv-card__tag{
+  position:absolute; left:10px; top:10px;
+  font-family:var(--f-mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--bone); background:rgba(8,11,15,.74); border:1px solid var(--line);
+  padding:.32em .62em; border-radius:2px;
+}.nmagv .nv-card__body{ padding:14px 15px 16px; display:grid; gap:5px; }.nmagv .nv-card__t{ font-family:var(--f-display); font-size:1.06rem; line-height:1.2; }.nmagv .nv-card__m{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.06em; color:var(--bone-3); }
+
+/* --- cazabon feature --------------------------------------------- */
+.nmagv .nv-feat{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.04fr); gap:clamp(22px,4vw,64px); align-items:center; }@media (max-width:880px){.nmagv .nv-feat{ grid-template-columns:1fr; } }.nmagv .nv-feat__art{ position:relative; border:1px solid var(--line); border-radius:2px; overflow:hidden; aspect-ratio:5/4; }.nmagv .nv-feat__art img{ width:100%; height:100%; object-fit:cover; }.nmagv .nv-feat__cap{
+  position:absolute; left:0; right:0; bottom:0; padding:14px 16px;
+  background:linear-gradient(to top, rgba(8,11,15,.94), rgba(8,11,15,0));
+  font-family:var(--f-mono); font-size:.66rem; letter-spacing:.08em; color:var(--bone-2);
+}.nmagv .nv-feat__body{ display:grid; gap:20px; }.nmagv .nv-feat__body h2{ font-size:var(--step-3); }.nmagv .nv-feat__body h2 em{ font-style:italic; color:var(--brass); }.nmagv .nv-dates{ font-family:var(--f-mono); font-size:.72rem; letter-spacing:.14em; color:var(--bone-3); }.nmagv .nv-pull{ border-left:2px solid var(--verm); padding-left:18px; font-family:var(--f-display); font-style:italic; font-size:var(--step-1); line-height:1.42; color:var(--bone); }
+
+/* --- timeline ---------------------------------------------------- */
+.nmagv .nv-tl{ display:grid; gap:0; border-top:1px solid var(--line-soft); }.nmagv .nv-tl__row{
+  display:grid; grid-template-columns:120px minmax(0,1fr); gap:clamp(16px,3vw,44px);
+  padding-block:clamp(18px,2.6vh,26px); border-bottom:1px solid var(--line-soft);
+}@media (max-width:640px){.nmagv .nv-tl__row{ grid-template-columns:1fr; gap:6px; } }.nmagv .nv-tl__y{ font-family:var(--f-mono); font-size:.86rem; letter-spacing:.1em; color:var(--brass); padding-top:.2em; }.nmagv .nv-tl__b h4{ font-size:var(--step-1); margin-bottom:6px; }.nmagv .nv-tl__b p{ color:var(--bone-2); font-size:.93rem; max-width:64ch; }
+
+/* --- map / visit -------------------------------------------------- */
+.nmagv .nv-visit{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:clamp(18px,2.6vw,32px); align-items:start; }@media (max-width:940px){.nmagv .nv-visit{ grid-template-columns:1fr; } }.nmagv .nv-mapbox{ border:1px solid var(--line); border-radius:2px; overflow:hidden; background:var(--ink-2); }.nmagv .nv-mapbox__bar{ display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line-soft); background:var(--ink-1); flex-wrap:wrap; }.nmagv .nv-mapbox__bar .nv-eyebrow{ margin-right:auto; }.nmagv .nv-mbtn{
+  font-family:var(--f-mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--bone-3); border:1px solid var(--line-soft); padding:.44em .8em; border-radius:2px;
+  text-decoration:none; transition:color .16s ease, border-color .16s ease, background .16s ease;
+}.nmagv .nv-mbtn:hover{ color:var(--bone); border-color:var(--bone-3); }.nmagv .nv-mbtn[aria-pressed="true"]{ color:var(--ink); background:var(--bone); border-color:var(--bone); }.nmagv .nv-mapbox__frame{ position:relative; height:clamp(320px,46vh,486px); }.nmagv .nv-mapbox__frame iframe{ width:100%; height:100%; border:0; display:block; filter:saturate(.8) contrast(1.04); }.nmagv .nv-info{ display:grid; gap:0; border:1px solid var(--line); border-radius:2px; background:var(--ink-1); }.nmagv .nv-info__row{ display:grid; gap:5px; padding:16px 18px; border-bottom:1px solid var(--line-soft); }.nmagv .nv-info__row:last-child{ border-bottom:0; }.nmagv .nv-info__v{ font-size:.94rem; color:var(--bone); }.nmagv .nv-info__v a{ color:var(--bone); text-decoration-color:var(--line); text-underline-offset:3px; }.nmagv .nv-info__v a:hover{ text-decoration-color:var(--verm); }.nmagv .nv-info__v .nv-mono{ font-family:var(--f-mono); font-size:.84rem; }.nmagv .nv-branches{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:clamp(18px,2.6vh,26px); }.nmagv .nv-branch{ border:1px solid var(--line-soft); border-radius:2px; padding:15px 16px; background:var(--ink-1); display:grid; gap:5px; }.nmagv .nv-branch__n{ font-family:var(--f-display); font-size:1.02rem; }.nmagv .nv-branch__l{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.08em; color:var(--bone-3); }
+
+/* --- object overlay ---------------------------------------------- */
+.nmagv .nv-ov{
+  position:fixed; inset:0; z-index:100; display:none;
+  background:rgba(4,6,9,.9); backdrop-filter:blur(9px);
+  padding:clamp(14px,4vh,44px); overflow-y:auto;
+}.nmagv .nv-ov.nv-is-open{ display:grid; place-items:center; }.nmagv .nv-ov__panel{
+  width:min(1000px,100%); background:var(--ink-1); border:1px solid var(--line); border-radius:2px;
+  display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,1fr); overflow:hidden;
+  animation:nv-rise .3s cubic-bezier(.2,.75,.3,1);
+}@keyframes nv-rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }@media (max-width:800px){.nmagv .nv-ov__panel{ grid-template-columns:1fr; } }.nmagv .nv-ov__fig{ background:var(--ink-2); min-height:260px; }.nmagv .nv-ov__fig img{ width:100%; height:100%; object-fit:cover; max-height:74vh; }.nmagv .nv-ov__body{ padding:clamp(22px,3vw,34px); display:grid; gap:16px; align-content:start; }.nmagv .nv-ov__body h3{ font-size:var(--step-2); }.nmagv .nv-ov__body p{ color:var(--bone-2); font-size:.94rem; line-height:1.66; }.nmagv .nv-ov__meta{ display:grid; gap:0; border-top:1px solid var(--line-soft); }.nmagv .nv-ov__meta div{ display:grid; grid-template-columns:112px 1fr; gap:14px; padding:.62em 0; border-bottom:1px solid var(--line-soft); }.nmagv .nv-ov__meta dt{ font-family:var(--f-mono); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--bone-3); padding-top:.24em; }.nmagv .nv-ov__meta dd{ margin:0; font-size:.9rem; color:var(--bone); }.nmagv .nv-ov__x{
+  position:absolute; right:clamp(14px,4vh,44px); top:clamp(14px,4vh,44px); z-index:101;
+  width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
+  border:1px solid var(--line); background:rgba(8,11,15,.8); color:var(--bone); font-size:1.1rem;
+}.nmagv .nv-ov__x:hover{ border-color:var(--bone-3); background:var(--ink-2); }
+
+/* --- notice + footer ---------------------------------------------- */
+.nmagv .nv-notice{
+  border:1px solid rgba(214,64,39,.34); background:rgba(214,64,39,.06);
+  border-radius:2px; padding:clamp(20px,2.6vw,28px); display:grid; gap:12px;
+}.nmagv .nv-notice h4{ font-family:var(--f-body); font-weight:600; font-size:.98rem; letter-spacing:.01em; }.nmagv .nv-notice p{ color:var(--bone-2); font-size:.9rem; line-height:1.66; max-width:82ch; }.nmagv .nv-notice ul{ margin:0; padding-left:1.1em; color:var(--bone-2); font-size:.9rem; line-height:1.7; display:grid; gap:4px; }.nmagv .nv-foot{ border-top:1px solid var(--line-soft); padding-block:clamp(38px,6vh,64px) 34px; background:var(--ink-1); }.nmagv .nv-foot__top{ display:flex; flex-wrap:wrap; gap:22px; justify-content:space-between; align-items:flex-end; margin-bottom:30px; }.nmagv .nv-foot__mark{ display:grid; gap:6px; }.nmagv .nv-foot__mark .nv-m{ font-family:var(--f-display); font-size:1.5rem; }.nmagv .nv-foot__cred{ font-size:.84rem; color:var(--bone-3); max-width:46ch; line-height:1.7; }.nmagv .nv-foot__cred a{ color:var(--bone-2); text-decoration-color:var(--line); text-underline-offset:3px; }.nmagv .nv-foot__cred a:hover{ color:var(--bone); text-decoration-color:var(--verm); }.nmagv .nv-foot__bar{ display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; border-top:1px solid var(--line-soft); padding-top:20px; font-family:var(--f-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--bone-3); }
+
+/* --- scroll reveal (rests visible) -------------------------------- */
+.nmagv .nv-rev{ opacity:1; transform:none; }@media (prefers-reduced-motion:no-preference){.nmagv .nv-rev{ opacity:.001; transform:translateY(16px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }.nmagv .nv-rev.nv-is-in{ opacity:1; transform:none; }.nmagv html.nv-no-js .nv-rev{ opacity:1; transform:none; }
+}@media (prefers-reduced-motion:reduce){.nmagv .nv-hero__media img{ animation:none; }.nmagv .nv-hot{ animation:none; }.nmagv *{ scroll-behavior:auto !important; }
+}.nmagv{ scroll-behavior:smooth; }
+/* --- guards against host-theme styles --- */
+.nmagv .nv-masthead{ position:relative; top:auto; }
+.nmagv a{ box-shadow:none; text-decoration:none; }
+.nmagv button{ -webkit-appearance:none; appearance:none; text-transform:none; letter-spacing:normal; border-radius:0; }
+.nmagv p,.nmagv ul,.nmagv li,.nmagv h1,.nmagv h2,.nmagv h3,.nmagv h4{ margin:0; }
+.nmagv .nv-ov{ position:fixed; }
+</style>
+<div class="nmagv">
+<!-- ================= MASTHEAD ================= -->
+<header class="nv-masthead">
+  <div class="nv-wrap nv-masthead__in">
+    <a class="nv-mark" href="#nv-top">
+      <span class="nv-mark__n">NMAG</span>
+      <span class="nv-mark__s">Virtual</span>
+    </a>
+    <nav class="nv-mnav" aria-label="Sections">
+      <a href="#nv-tour">The Tour</a>
+      <a href="#nv-collection">Collection</a>
+      <a href="#nv-cazabon">Cazabon</a>
+      <a href="#nv-building">The Building</a>
+      <a href="#nv-visit">Visit</a>
+    </nav>
+    <span class="nv-chip nv-chip--demo">Concept Demo</span>
+  </div>
+</header>
+
+<main id="nv-top">
+
+  <!-- ================= HERO ================= -->
+  <section class="nv-hero">
+    <div class="nv-hero__media">
+      <img src="https://images.unsplash.com/photo-1782603090066-7455a1e777b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400" alt="A long vaulted museum corridor lit by warm ambient light.">
+    </div>
+    <div class="nv-wrap nv-hero__in">
+      <p class="nv-eyebrow"><span class="nv-tick">&#9679;</span> Royal Victoria Institute &middot; Port of Spain &middot; Est. 1892</p>
+      <h1>The doors are closed.<br>The collection <em>isn&rsquo;t</em>.</h1>
+      <p class="nv-lede">A virtual tour of the National Museum &amp; Art Gallery of Trinidad and Tobago &mdash; seven galleries, some ten thousand objects, and 130 years of the Royal Victoria Institute, walkable from anywhere in the world.</p>
+      <div class="nv-hero__cta">
+        <a class="nv-btn nv-btn--solid" href="#nv-tour">Begin the tour <span class="nv-arrow">&rarr;</span></a>
+        <a class="nv-btn nv-btn--ghost" href="#nv-visit">See the building <span class="nv-arrow">&rarr;</span></a>
+      </div>
+      <div class="nv-hero__facts">
+        <span class="nv-chip">7 galleries</span>
+        <span class="nv-chip">&asymp;10,000 objects</span>
+        <span class="nv-chip">Admission free</span>
+        <span class="nv-chip">117 Frederick St</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE TOUR ================= -->
+  <section class="nv-sec" id="nv-tour">
+    <div class="nv-wrap">
+      <div class="nv-sec__head nv-rev">
+        <p class="nv-eyebrow">01 &mdash; Walk the rooms</p>
+        <h2>Seven galleries, one continuous floor.</h2>
+        <p class="nv-lede">Choose a room and look around. Drag the view to pan the space; the numbered markers open the object label, exactly as the wall card would in the building itself.</p>
+      </div>
+
+      <div class="nv-roomnav" role="tablist" aria-label="Galleries" id="nv-roomnav"></div>
+
+      <div class="nv-stage">
+        <div>
+          <div class="nv-pano" id="nv-pano" tabindex="0" role="img" aria-label="Panoramic view of the selected gallery. Drag or use arrow keys to look around.">
+            <div class="nv-pano__track" id="nv-panoTrack"></div>
+            <div class="nv-pano__vig"></div>
+            <span class="nv-pano__scan" id="nv-panoScan">G1 &middot; 360&deg;</span>
+            <div class="nv-pano__hint" id="nv-panoHint">
+              <span>&#8596;</span><span>Drag to look around</span>
+            </div>
+          </div>
+        </div>
+        <div class="nv-label" id="nv-roomLabel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COLLECTION ================= -->
+  <section class="nv-sec nv-sec--alt" id="nv-collection">
+    <div class="nv-wrap">
+      <div class="nv-sec__head nv-rev">
+        <p class="nv-eyebrow">02 &mdash; The collection</p>
+        <h2>Objects held across the seven rooms.</h2>
+        <p class="nv-lede">Filter by gallery. Every tile opens a full object record &mdash; the same fields the museum&rsquo;s catalogue carries.</p>
+      </div>
+      <div class="nv-filters" id="nv-filters"></div>
+      <div class="nv-grid" id="nv-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= CAZABON ================= -->
+  <section class="nv-sec" id="nv-cazabon">
+    <div class="nv-wrap">
+      <div class="nv-feat nv-rev">
+        <div class="nv-feat__art">
+          <img src="https://images.unsplash.com/photo-1572953109213-3be62398eb95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600" alt="Visitors moving along a hung gallery corridor.">
+          <div class="nv-feat__cap">The Art Gallery &middot; hang rotates seasonally</div>
+        </div>
+        <div class="nv-feat__body">
+          <p class="nv-eyebrow">03 &mdash; Featured artist</p>
+          <h2>Michel-Jean <em>Cazabon</em></h2>
+          <p class="nv-dates">1813 &ndash; 1888 &middot; Naparima, Trinidad</p>
+          <p class="nv-lede" style="font-size:var(--step-0)">Trinidad&rsquo;s first internationally known painter. Cazabon trained in Paris under Paul Delaroche &mdash; having been sent to study medicine and quietly switched to fine art &mdash; then returned home and spent his career painting the island: the Caroni river, the Port of Spain docks, the estate houses and bamboo arches of the northern valleys.</p>
+          <p class="nv-pull">Photography did not reach Trinidad in any quantity until after his death. Cazabon&rsquo;s watercolours are, for much of the nineteenth century, the closest thing the country has to a photographic record of itself.</p>
+          <p class="nv-lede" style="font-size:var(--step-0)">The museum holds a dedicated Cazabon gallery. Other works sit in private collections across Trinidad and abroad, and in the Louvre.</p>
+          <a class="nv-btn nv-btn--ghost" href="https://artsandculture.google.com/entity/michel-jean-cazabon/m05v6g3" target="_blank" rel="noopener">Cazabon on Google Arts &amp; Culture <span class="nv-arrow">&#8599;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BUILDING ================= -->
+  <section class="nv-sec nv-sec--alt" id="nv-building">
+    <div class="nv-wrap">
+      <div class="nv-sec__head nv-rev">
+        <p class="nv-eyebrow">04 &mdash; The building</p>
+        <h2>A German Renaissance hall at the top of Frederick Street.</h2>
+        <p class="nv-lede">Designed by Daniel Meinerts Hahn, Chief Draughtsman of the Public Works Department &mdash; Dutch gables and a slate roof, built for the tropics and named for a queen&rsquo;s jubilee.</p>
+      </div>
+      <div class="nv-tl nv-rev">
+        <div class="nv-tl__row">
+          <div class="nv-tl__y">1892</div>
+          <div class="nv-tl__b">
+            <h4>The Royal Victoria Institute opens</h4>
+            <p>Opened on 17 September and named to mark Queen Victoria&rsquo;s jubilee, the Institute is conceived as a combined museum, art gallery and technical school &mdash; a single civic building for the industrial and cultural instruction of the colony.</p>
+          </div>
+        </div>
+        <div class="nv-tl__row">
+          <div class="nv-tl__y">1920</div>
+          <div class="nv-tl__b">
+            <h4>Fire</h4>
+            <p>The building is gutted. Much of the original holding is lost &mdash; the reason a museum founded in 1892 dates so much of its surviving collection to the decades after.</p>
+          </div>
+        </div>
+        <div class="nv-tl__row">
+          <div class="nv-tl__y">1923</div>
+          <div class="nv-tl__b">
+            <h4>Rebuilt on the same ground</h4>
+            <p>Reconstruction restores the Institute to Frederick Street, opposite Memorial Park and just south of the Queen&rsquo;s Park Savannah, where it has stood ever since.</p>
+          </div>
+        </div>
+        <div class="nv-tl__row">
+          <div class="nv-tl__y">1965</div>
+          <div class="nv-tl__b">
+            <h4>The National Museum and Art Gallery</h4>
+            <p>Three years after independence, the Royal Victoria Institute is renamed. The collection is re-framed around a national story rather than an imperial one.</p>
+          </div>
+        </div>
+        <div class="nv-tl__row">
+          <div class="nv-tl__y">Today</div>
+          <div class="nv-tl__b">
+            <h4>Closed for renovation</h4>
+            <p>The main building is currently closed to the public for restoration works &mdash; which is precisely the argument for a virtual tour. A digital floor keeps the collection open while the physical one is shut, and stays open to schools, the diaspora and researchers long after the scaffolding comes down.</p>
+            <p style="margin-top:10px"><a href="https://nationaltrust.tt/location/royal-victoria-institute/" target="_blank" rel="noopener" style="font-size:.88rem;color:var(--bone);text-decoration-color:var(--line);text-underline-offset:3px">Royal Victoria Institute &mdash; National Trust of Trinidad &amp; Tobago &#8599;</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VISIT / MAP ================= -->
+  <section class="nv-sec" id="nv-visit">
+    <div class="nv-wrap">
+      <div class="nv-sec__head nv-rev">
+        <p class="nv-eyebrow">05 &mdash; Arrive</p>
+        <h2>Step outside the building before you step in.</h2>
+        <p class="nv-lede">The tour begins on the pavement. Pan the map, drop into Street View, and approach the fa&ccedil;ade the way a visitor walking up Frederick Street would.</p>
+      </div>
+
+      <div class="nv-visit nv-rev">
+        <div class="nv-mapbox">
+          <div class="nv-mapbox__bar">
+            <p class="nv-eyebrow">Exterior &middot; 10.6606&deg;N 61.5085&deg;W</p>
+            <button class="nv-mbtn" id="nv-mMap" aria-pressed="true">Map</button>
+            <button class="nv-mbtn" id="nv-mSat" aria-pressed="false">Satellite</button>
+            <a class="nv-mbtn" id="nv-mPano" href="https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=10.6606,-61.5085&amp;heading=110" target="_blank" rel="noopener">Street View &#8599;</a>
+          </div>
+          <div class="nv-mapbox__frame">
+            <iframe id="nv-gmap" title="Map of the National Museum and Art Gallery, 117 Frederick Street, Port of Spain" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=National%20Museum%20and%20Art%20Gallery%2C%20117%20Frederick%20Street%2C%20Port%20of%20Spain%2C%20Trinidad&amp;z=17&amp;output=embed"></iframe>
+          </div>
+        </div>
+
+        <div class="nv-info">
+          <div class="nv-info__row">
+            <p class="nv-eyebrow">Address</p>
+            <p class="nv-info__v">117 Frederick Street<br>Port of Spain, Trinidad &amp; Tobago</p>
+          </div>
+          <div class="nv-info__row">
+            <p class="nv-eyebrow">Opening hours</p>
+            <p class="nv-info__v">Tuesday &ndash; Saturday, 10:00 &ndash; 18:00<br><span class="nv-mono" style="color:var(--bone-3)">Closed Sun &amp; Mon</span></p>
+          </div>
+          <div class="nv-info__row">
+            <p class="nv-eyebrow">Admission</p>
+            <p class="nv-info__v">Free</p>
+          </div>
+          <div class="nv-info__row">
+            <p class="nv-eyebrow">Telephone</p>
+            <p class="nv-info__v"><a href="tel:+18686121064" class="nv-mono">+1 868 612 1064</a></p>
+          </div>
+          <div class="nv-info__row">
+            <p class="nv-eyebrow">Getting there</p>
+            <p class="nv-info__v" style="color:var(--bone-2);font-size:.9rem">At the top of Frederick Street, facing Memorial Park and a short walk south of the Queen&rsquo;s Park Savannah.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="nv-eyebrow nv-rev" style="margin-top:clamp(30px,4.5vh,48px)">Branch museums</p>
+      <div class="nv-branches nv-rev">
+        <div class="nv-branch">
+          <span class="nv-branch__n">Museum of the City of Port of Spain</span>
+          <span class="nv-branch__l">Fort San Andr&eacute;s</span>
+        </div>
+        <div class="nv-branch">
+          <span class="nv-branch__n">Police Service Museum</span>
+          <span class="nv-branch__l">Police Headquarters</span>
+        </div>
+        <div class="nv-branch">
+          <span class="nv-branch__n">The Money Museum</span>
+          <span class="nv-branch__l">Central Bank of Trinidad &amp; Tobago</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NOTICE ================= -->
+  <section class="nv-sec nv-sec--tight">
+    <div class="nv-wrap">
+      <div class="nv-notice nv-rev">
+        <p class="nv-eyebrow" style="color:var(--verm-lit)">Read this first</p>
+        <h4>This is a concept demo, not a museum publication.</h4>
+        <p>Built by Tweller Studios to show the National Museum &amp; Art Gallery what a virtual tour of their collection could be. The framework is real and working; the contents are stand-ins.</p>
+        <ul>
+          <li><strong style="color:var(--bone)">The history is real.</strong> Dates, architecture, gallery themes, Cazabon, the Angostura puncheon, the branch museums and the visitor details are drawn from published sources.</li>
+          <li><strong style="color:var(--bone)">The photography is not.</strong> Every image here is a licensed stock photograph standing in for an object NMAG actually holds. None of them depicts a real item in the collection.</li>
+          <li><strong style="color:var(--bone)">The object records are illustrative.</strong> Accession numbers are marked <span class="nv-mono" style="font-family:var(--f-mono);color:var(--verm-lit)">DEMO</span> and are placeholders for the museum&rsquo;s own catalogue data.</li>
+          <li><strong style="color:var(--bone)">In production</strong>, the panoramas would be true 360&deg; captures of each room, the objects photographed on site, and the records fed from the museum&rsquo;s collections management system.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= OBJECT OVERLAY ================= -->
+<div class="nv-ov" id="nv-ov" role="dialog" aria-modal="true" aria-labelledby="ovTitle">
+  <button class="nv-ov__x" id="nv-ovX" aria-label="Close object record">&#10005;</button>
+  <div class="nv-ov__panel">
+    <div class="nv-ov__fig"><img id="nv-ovImg" src="" alt=""></div>
+    <div class="nv-ov__body">
+      <p class="nv-eyebrow" id="nv-ovRoom"></p>
+      <h3 id="nv-ovTitle"></h3>
+      <p id="nv-ovDesc"></p>
+      <dl class="nv-ov__meta" id="nv-ovMeta"></dl>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="nv-foot">
+  <div class="nv-wrap">
+    <div class="nv-foot__top">
+      <div class="nv-foot__mark">
+        <span class="nv-m">NMAG Virtual</span>
+        <span class="nv-eyebrow">A concept by Tweller Studios</span>
+      </div>
+      <p class="nv-foot__cred" id="nv-credits">
+        Stand-in photography from Unsplash, by
+        <a href="https://unsplash.com/@by_danny_g" target="_blank" rel="noopener">Danny Greenberg</a>,
+        <a href="https://unsplash.com/@amyb99" target="_blank" rel="noopener">Amy-Leigh Barnard</a>,
+        <a href="https://unsplash.com/@nganduong93" target="_blank" rel="noopener">Duong Ngan</a>,
+        <a href="https://unsplash.com/@ottelo" target="_blank" rel="noopener">Anton Acosta</a>,
+        <a href="https://unsplash.com/@howyblackbelt" target="_blank" rel="noopener">Holger Woizick</a>,
+        <a href="https://unsplash.com/@floriankrumm" target="_blank" rel="noopener">Florian Krumm</a>,
+        <a href="https://unsplash.com/@jorgenchu" target="_blank" rel="noopener">Jorge Garcia</a>,
+        <a href="https://unsplash.com/@chrsndrsn" target="_blank" rel="noopener">CHRSNDRSN</a>,
+        <a href="https://unsplash.com/@hlandkammer" target="_blank" rel="noopener">Holly Landkammer</a>,
+        <a href="https://unsplash.com/@tepapa" target="_blank" rel="noopener">Museum of New Zealand Te Papa Tongarewa</a>,
+        <a href="https://unsplash.com/@contentpixie" target="_blank" rel="noopener">Content Pixie</a>,
+        <a href="https://unsplash.com/@trnavskauni" target="_blank" rel="noopener">Trnava University</a>,
+        <a href="https://unsplash.com/@timebottlestudio_lennonlee" target="_blank" rel="noopener">Ly Le Minh</a>,
+        <a href="https://unsplash.com/@artchicago" target="_blank" rel="noopener">Art Institute of Chicago</a>,
+        <a href="https://unsplash.com/@evieshaffer" target="_blank" rel="noopener">Evie S.</a>,
+        <a href="https://unsplash.com/@exophist" target="_blank" rel="noopener">Shaueel Persadee</a>,
+        <a href="https://unsplash.com/@jasondeblooisphotography" target="_blank" rel="noopener">Jason D</a>,
+        <a href="https://unsplash.com/@iamromankraft" target="_blank" rel="noopener">Roman Kraft</a>,
+        <a href="https://unsplash.com/@davidchangkit" target="_blank" rel="noopener">David Chang Kit</a> and
+        <a href="https://unsplash.com/@milinjohn" target="_blank" rel="noopener">Milin John</a>
+        on <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>. Mapping by Google.
+      </p>
+    </div>
+    <div class="nv-foot__bar">
+      <span>Concept demo &middot; not affiliated with NMAG</span>
+      <span>Tweller Studios &middot; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------
+   Configuration
+   Drop a Google Maps Embed API key here and the Street View button
+   becomes an inline panorama instead of an outbound link.
+------------------------------------------------------------------ */
+var CONFIG = {
+  googleMapsApiKey: "",
+  lat: 10.6606,
+  lng: -61.5085,
+  placeQuery: "National Museum and Art Gallery, 117 Frederick Street, Port of Spain, Trinidad"
+};
+
+var U = function (id, w) { return "https://images.unsplash.com/photo-" + id + "?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=" + (w || 1200); };
+
+/* ------------------------------------------------------------------
+   Galleries — themes and holdings are drawn from published sources.
+------------------------------------------------------------------ */
+var GALLERIES = [
+  {
+    id: "art", code: "G1", name: "Art & the Cazabon Collection",
+    pano: U("1572953109213-3be62398eb95", 2400),
+    alt: "A long hung gallery with visitors walking past framed works.",
+    text: "The gallery's heart. Works by Michel-Jean Cazabon (1813–1888), the first Trinidadian painter to win an international reputation, hang alongside later national artists. Cazabon's watercolours of the Caroni, the Port of Spain docks and the northern valleys are, for much of the nineteenth century, the closest thing the country has to a photographic record of itself."
+  },
+  {
+    id: "first", code: "G2", name: "The First Peoples",
+    pano: U("1729673284876-d7a240c50b43", 2400),
+    alt: "Ceramic vessels displayed in a dimly lit case-lined room.",
+    text: "Artefacts of the island's earliest inhabitants — the Amerindian communities whose settlements along the Caroni and the north coast predate European arrival by millennia. Ceramics, worked shell and stone, and archaeological finds from sites across Trinidad."
+  },
+  {
+    id: "carnival", code: "G3", name: "Carnival Arts",
+    pano: U("1767801829041-f5243a34525d", 2400),
+    alt: "Masqueraders in elaborate feathered costumes at a street festival.",
+    text: "A permanent display of mas — masks, headpieces and costumes from Carnivals past. From the sailor and the midnight robber to the wire-bent grandeur of the modern king and queen, the room traces how a street festival became the country's largest act of collective authorship."
+  },
+  {
+    id: "social", code: "G4", name: "Social History",
+    pano: U("1557680378-b6d7373d083e", 2400),
+    alt: "An arched colonial hallway with a wall clock.",
+    text: "Colonial administration, emancipation, Indian indenture, and the American bases of the Second World War — the making of a plural society, told through documents, dress, photographs and household objects."
+  },
+  {
+    id: "economic", code: "G5", name: "Economic History",
+    pano: U("1763556736762-7010ea835e2d", 2400),
+    alt: "Sunlight falling through a long arched stone passageway.",
+    text: "Sugar, cocoa and bitters. Among the room's holdings is an original puncheon used by Dr J. G. B. Siegert in the manufacture of Angostura aromatic bitters — the product that carried the name of a Venezuelan town onto back bars on every continent."
+  },
+  {
+    id: "petroleum", code: "G6", name: "Petroleum & Geology",
+    pano: U("1780162706863-35e2d5df4e07", 2400),
+    alt: "Industrial port structures silhouetted against a dramatic sunset.",
+    text: "Trinidad drilled one of the world's earliest oil wells and has lived with the consequences ever since. The gallery covers the geology beneath the island, the Pitch Lake at La Brea, and the offshore rigs that reshaped the twentieth-century economy."
+  },
+  {
+    id: "natural", code: "G7", name: "Natural History",
+    pano: U("1682289497815-b1b3805c7359", 2400),
+    alt: "A wall of mounted butterfly specimens in display cases.",
+    text: "Two islands sitting on the South American continental shelf — which is why Trinidad has ocelots, howler monkeys and some four hundred bird species where its Caribbean neighbours do not. Mounted specimens, insects, and the scarlet ibis, the national bird."
+  }
+];
+
+/* ------------------------------------------------------------------
+   Objects — ILLUSTRATIVE placeholders. Accession numbers are marked
+   DEMO and do not correspond to real NMAG catalogue records.
+------------------------------------------------------------------ */
+var OBJECTS = [
+  { g:"art", t:"Bamboo Arches, Northern Range", img:U("1606113014706-4aed0562853b"), medium:"Watercolour on paper", date:"c. 1850s", acc:"NMAG-DEMO-A014", x:.16, y:.46,
+    d:"A river cut framed by arching bamboo — one of the compositions Cazabon returned to repeatedly, and among the most copied images of nineteenth-century Trinidad." },
+  { g:"art", t:"Study of the Port of Spain Docks", img:U("1563000215-e31a8ddcb2d0"), medium:"Watercolour and graphite", date:"c. 1860s", acc:"NMAG-DEMO-A027", x:.42, y:.52,
+    d:"Shipping at the wharf, drawn from the western shore. Cazabon worked quickly in watercolour on site, finishing in the studio." },
+  { g:"art", t:"Portrait of a Planter's Household", img:U("1569783721854-33a99b4c0bae"), medium:"Oil on canvas", date:"1871", acc:"NMAG-DEMO-A088", x:.71, y:.44,
+    d:"Commissioned portraiture formed a steady income for painters working the island's estate economy." },
+
+  { g:"first", t:"Globular Vessel with Incised Rim", img:U("1656088239658-ca839d7e8841"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F003", x:.2, y:.5,
+    d:"Domestic ware recovered from a coastal midden. Incised decoration around the shoulder is characteristic of the island's later ceramic sequence." },
+  { g:"first", t:"Storage Jar, Caroni Basin", img:U("1628074958552-7c9d0b4173b7"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F011", x:.48, y:.55,
+    d:"A large-capacity vessel of the kind used for water and fermented cassava, reconstructed from sherds." },
+  { g:"first", t:"Burial Urn Fragment", img:U("1651135200225-b5aee94f00bd"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F026", x:.77, y:.47,
+    d:"Secondary burial in ceramic urns is documented at several Trinidadian sites and links the island's communities to the Orinoco mainland." },
+
+  { g:"carnival", t:"Queen of the Band Headpiece", img:U("1642076195906-2804dead9a7e"), medium:"Wire, feather, sequin, fibreglass", date:"2000s", acc:"NMAG-DEMO-C007", x:.19, y:.48,
+    d:"Wire-bending is the structural craft beneath large mas — a skill passed through a small number of Port of Spain camps." },
+  { g:"carnival", t:"Midnight Robber Costume", img:U("1767801829436-d38dfa1a1b15"), medium:"Textile, braid, painted board", date:"Mid-20th century", acc:"NMAG-DEMO-C019", x:.5, y:.53,
+    d:"A traditional character mas built around the robber's spoken oration — a rhetorical performance as much as a costume." },
+  { g:"carnival", t:"Sailor Mas Ensemble", img:U("1718996955920-c00347f98707"), medium:"Cotton drill, paint, papier-mâché", date:"Mid-20th century", acc:"NMAG-DEMO-C033", x:.79, y:.5,
+    d:"Sailor mas took the uniform of visiting naval crews and turned it, through powder and exaggerated movement, into satire." },
+  { g:"carnival", t:"Tenor Pan", img:U("1659587661499-fc541e0508c1"), medium:"Tempered steel drum", date:"Late 20th century", acc:"NMAG-DEMO-C041", x:.35, y:.66,
+    d:"The steelpan is the only acoustic instrument invented in the twentieth century, and it was invented here." },
+
+  { g:"social", t:"Album of Studio Portraits", img:U("1528569937393-ee892b976859"), medium:"Albumen prints, bound", date:"c. 1900–1930", acc:"NMAG-DEMO-S005", x:.22, y:.52,
+    d:"Commercial studio photography documented a society being remade by emancipation and indenture." },
+  { g:"social", t:"Correspondence and Estate Papers", img:U("1453828423292-392a660a502f"), medium:"Ink on paper", date:"19th century", acc:"NMAG-DEMO-S018", x:.53, y:.58,
+    d:"Ledgers, indenture records and household correspondence — the paper trail of the plantation economy." },
+  { g:"social", t:"Wartime Ephemera, US Bases", img:U("1722173205783-d602329f0743"), medium:"Photographic prints", date:"1941–1947", acc:"NMAG-DEMO-S052", x:.78, y:.5,
+    d:"The Chaguaramas and Waller Field bases brought thousands of American servicemen — and calypso's sharpest social commentary." },
+
+  { g:"economic", t:"Angostura Puncheon", img:U("1447069387593-a5de0862481e"), medium:"Oak, iron hoops", date:"19th century", acc:"NMAG-DEMO-E001", x:.24, y:.5,
+    d:"An original puncheon used by Dr J. G. B. Siegert in the manufacture of Angostura aromatic bitters. The museum holds it as the founding object of the country's best-known export brand." },
+  { g:"economic", t:"Cacao Pods, Trinitario", img:U("1573710661345-610f790e1218"), medium:"Botanical specimen", date:"Collected 20th century", acc:"NMAG-DEMO-E014", x:.55, y:.56,
+    d:"Trinitario cacao — a cross of Criollo and Forastero that arose on this island — remains a benchmark fine-flavour bean." },
+  { g:"economic", t:"Estate Weighing Scale", img:U("1611078295948-10b3961e1e40"), medium:"Cast iron and brass", date:"c. 1900", acc:"NMAG-DEMO-E029", x:.8, y:.49,
+    d:"Field scales of this pattern were used across the sugar and cocoa estates to weigh a day's cut." },
+
+  { g:"petroleum", t:"Pitch Lake Asphalt Sample", img:U("1596226310268-f76b50d14a4a"), medium:"Natural asphalt", date:"Collected 20th century", acc:"NMAG-DEMO-P002", x:.21, y:.55,
+    d:"From La Brea — the largest natural deposit of asphalt in the world, and paving material for streets from London to New York." },
+  { g:"petroleum", t:"Core Sample Series", img:U("1546608135-e5de34abc308"), medium:"Drilled rock core", date:"20th century", acc:"NMAG-DEMO-P016", x:.52, y:.5,
+    d:"Cores of the sedimentary sequence beneath southern Trinidad, showing the reservoir rock that made the fields productive." },
+  { g:"petroleum", t:"Offshore Rig Model", img:U("1786700960080-15d9ad057815"), medium:"Painted metal and acrylic", date:"Late 20th century", acc:"NMAG-DEMO-P037", x:.79, y:.46,
+    d:"A cutaway model used to explain drilling to schools — one of the gallery's most-used teaching objects." },
+
+  { g:"natural", t:"Scarlet Ibis", img:U("1617654611907-21b4f00ea36a"), medium:"Mounted specimen", date:"Undated", acc:"NMAG-DEMO-N001", x:.2, y:.48,
+    d:"Eudocimus ruber — the national bird, and the reason the Caroni Swamp fills with red at dusk." },
+  { g:"natural", t:"Lepidoptera Case", img:U("1542650507-17d51cecbbb5"), medium:"Pinned specimens, glazed case", date:"Assembled 20th century", acc:"NMAG-DEMO-N022", x:.5, y:.53,
+    d:"Trinidad's butterfly fauna is continental rather than insular — richer by an order of magnitude than the islands to the north." },
+  { g:"natural", t:"Blue Morpho", img:U("1560263816-af96782560f3"), medium:"Pinned specimen", date:"Undated", acc:"NMAG-DEMO-N044", x:.76, y:.5,
+    d:"The wing's blue is structural, not pigmented — produced by microscopic lamellae rather than dye." }
+];
+
+/* ------------------------------------------------------------------
+   Boot
+------------------------------------------------------------------ */
+var ROOT = document.querySelector(".nmagv");
+var $ = function (s, r) { return (r || ROOT).querySelector(s); };
+var objsFor = function (gid) { return OBJECTS.filter(function (o) { return o.g === gid; }); };
+var gById = function (gid) { for (var i = 0; i < GALLERIES.length; i++) if (GALLERIES[i].id === gid) return GALLERIES[i]; return null; };
+
+/* ---------- room navigation ---------- */
+var roomnav = $("#nv-roomnav");
+GALLERIES.forEach(function (g, i) {
+  var b = document.createElement("button");
+  b.className = "nv-roomtab";
+  b.type = "button";
+  b.setAttribute("role", "tab");
+  b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+  b.dataset.g = g.id;
+  b.innerHTML = '<span class="nv-roomtab__c">' + g.code + '</span><span class="nv-roomtab__n"></span>';
+  $(".nv-roomtab__n", b).textContent = g.name;
+  b.addEventListener("click", function () { selectRoom(g.id); });
+  roomnav.appendChild(b);
+});
+
+/* ---------- panorama ---------- */
+var pano = $("#nv-pano"), track = $("#nv-panoTrack"), hint = $("#nv-panoHint"), scan = $("#nv-panoScan");
+var offset = 0, minOffset = 0, dragging = false, startX = 0, startOffset = 0;
+var velocity = 0, lastX = 0, lastT = 0, rafId = null, driftId = null, touched = false;
+var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function apply() { track.style.transform = "translate3d(" + offset + "px,0,0)"; }
+function clamp(v) { return Math.max(minOffset, Math.min(0, v)); }
+
+function measure() {
+  var img = track.querySelector("img");
+  if (!img) return;
+  var tw = img.offsetWidth || track.offsetWidth;
+  minOffset = Math.min(0, pano.clientWidth - tw);
+  offset = clamp(offset);
+  apply();
+}
+
+function stopDrift() {
+  if (driftId) { cancelAnimationFrame(driftId); driftId = null; }
+}
+
+function startDrift() {
+  if (reduce || touched) return;
+  var dir = -1;
+  function step() {
+    if (touched) return;
+    offset += dir * 0.22;
+    if (offset <= minOffset || offset >= 0) dir *= -1;
+    offset = clamp(offset);
+    apply();
+    driftId = requestAnimationFrame(step);
+  }
+  driftId = requestAnimationFrame(step);
+}
+
+function markTouched() {
+  if (touched) return;
+  touched = true;
+  stopDrift();
+  hint.classList.add("nv-is-gone");
+}
+
+pano.addEventListener("pointerdown", function (e) {
+  if (e.target.closest(".nv-hot")) return;
+  markTouched();
+  dragging = true;
+  pano.classList.add("nv-is-drag");
+  startX = lastX = e.clientX;
+  startOffset = offset;
+  lastT = performance.now();
+  velocity = 0;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  pano.setPointerCapture(e.pointerId);
+});
+
+pano.addEventListener("pointermove", function (e) {
+  if (!dragging) return;
+  offset = clamp(startOffset + (e.clientX - startX));
+  apply();
+  var now = performance.now(), dt = now - lastT;
+  if (dt > 0) { velocity = (e.clientX - lastX) / dt * 16; lastX = e.clientX; lastT = now; }
+});
+
+function endDrag(e) {
+  if (!dragging) return;
+  dragging = false;
+  pano.classList.remove("nv-is-drag");
+  try { pano.releasePointerCapture(e.pointerId); } catch (err) {}
+  if (reduce) return;
+  (function glide() {
+    velocity *= 0.94;
+    if (Math.abs(velocity) < 0.15) { rafId = null; return; }
+    var next = clamp(offset + velocity);
+    if (next === offset) { rafId = null; return; }
+    offset = next; apply();
+    rafId = requestAnimationFrame(glide);
+  })();
+}
+pano.addEventListener("pointerup", endDrag);
+pano.addEventListener("pointercancel", endDrag);
+
+pano.addEventListener("keydown", function (e) {
+  var s = e.shiftKey ? 160 : 60;
+  if (e.key === "ArrowRight") { markTouched(); offset = clamp(offset - s); apply(); e.preventDefault(); }
+  if (e.key === "ArrowLeft")  { markTouched(); offset = clamp(offset + s); apply(); e.preventDefault(); }
+});
+
+window.addEventListener("resize", measure);
+
+/* ---------- select a room ---------- */
+function selectRoom(gid) {
+  var g = gById(gid);
+  if (!g) return;
+
+  Array.prototype.forEach.call(roomnav.children, function (b) {
+    b.setAttribute("aria-selected", b.dataset.g === gid ? "true" : "false");
+  });
+
+  stopDrift();
+  touched = false;
+  hint.classList.remove("nv-is-gone");
+  scan.innerHTML = g.code + " &middot; 360&deg;";
+  pano.setAttribute("aria-label", "Panoramic view of " + g.name + ". Drag or use arrow keys to look around.");
+
+  track.innerHTML = "";
+  var img = new Image();
+  img.src = g.pano;
+  img.alt = g.alt;
+  img.decoding = "async";
+  track.appendChild(img);
+
+  var list = objsFor(gid);
+  list.forEach(function (o, i) {
+    var h = document.createElement("button");
+    h.className = "nv-hot";
+    h.type = "button";
+    h.style.left = (o.x * 100) + "%";
+    h.style.top = (o.y * 100) + "%";
+    h.style.animationDelay = (i * 0.35) + "s";
+    h.textContent = String(i + 1);
+    h.setAttribute("aria-label", "Object " + (i + 1) + ": " + o.t);
+    h.addEventListener("click", function (e) { e.stopPropagation(); openObject(o); });
+    track.appendChild(h);
+  });
+
+  function ready() { offset = 0; measure(); offset = minOffset / 2; apply(); startDrift(); }
+  if (img.complete) ready(); else img.addEventListener("load", ready, { once: true });
+
+  // room label card
+  var label = $("#nv-roomLabel");
+  label.innerHTML =
+    '<div class="nv-label__code"><span>' + g.code + '</span><span>' + list.length + ' objects on view</span></div>' +
+    '<h3></h3><p></p>' +
+    '<div class="nv-label__objs"><p class="nv-eyebrow">In this room</p></div>';
+  $("h3", label).textContent = g.name;
+  $("p", label).textContent = g.text;
+  var box = $(".nv-label__objs", label);
+  list.forEach(function (o, i) {
+    var b = document.createElement("button");
+    b.className = "nv-objline";
+    b.type = "button";
+    b.innerHTML = '<span class="nv-objline__n">' + (i + 1) + '</span><span class="nv-objline__t"></span>';
+    $(".nv-objline__t", b).textContent = o.t;
+    b.addEventListener("click", function () { openObject(o); });
+    box.appendChild(b);
+  });
+}
+
+/* ---------- collection grid ---------- */
+var filters = $("#nv-filters"), grid = $("#nv-grid");
+var FILTS = [{ id: "all", name: "All galleries" }].concat(GALLERIES.map(function (g) { return { id: g.id, name: g.name }; }));
+
+FILTS.forEach(function (f, i) {
+  var b = document.createElement("button");
+  b.className = "nv-filt";
+  b.type = "button";
+  b.textContent = f.name;
+  b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+  b.addEventListener("click", function () {
+    Array.prototype.forEach.call(filters.children, function (x) { x.setAttribute("aria-pressed", "false"); });
+    b.setAttribute("aria-pressed", "true");
+    renderGrid(f.id);
+  });
+  filters.appendChild(b);
+});
+
+function renderGrid(fid) {
+  var list = fid === "all" ? OBJECTS : objsFor(fid);
+  grid.innerHTML = "";
+  list.forEach(function (o) {
+    var g = gById(o.g);
+    var c = document.createElement("button");
+    c.className = "nv-card";
+    c.type = "button";
+    c.innerHTML =
+      '<div class="nv-card__fig"><span class="nv-card__tag">' + g.code + '</span><img loading="lazy" decoding="async" src="' + o.img + '" alt=""></div>' +
+      '<div class="nv-card__body"><span class="nv-card__t"></span><span class="nv-card__m"></span></div>';
+    $(".nv-card__t", c).textContent = o.t;
+    $(".nv-card__m", c).textContent = o.date + " · " + o.acc;
+    $("img", c).alt = o.t + " — stand-in photograph";
+    c.addEventListener("click", function () { openObject(o); });
+    grid.appendChild(c);
+  });
+}
+
+/* ---------- object overlay ---------- */
+var ov = $("#nv-ov"), lastFocus = null;
+
+function openObject(o) {
+  var g = gById(o.g);
+  lastFocus = document.activeElement;
+  $("#nv-ovImg").src = o.img.replace("w=1200", "w=1600");
+  $("#nv-ovImg").alt = o.t + " — stand-in photograph";
+  $("#nv-ovRoom").innerHTML = g.code + " &middot; " + g.name;
+  $("#nv-ovTitle").textContent = o.t;
+  $("#nv-ovDesc").textContent = o.d;
+  $("#nv-ovMeta").innerHTML =
+    '<div><dt>Medium</dt><dd class="nv-m1"></dd></div>' +
+    '<div><dt>Date</dt><dd class="nv-m2"></dd></div>' +
+    '<div><dt>Gallery</dt><dd class="nv-m3"></dd></div>' +
+    '<div><dt>Accession</dt><dd class="nv-m4" style="font-family:var(--f-mono);font-size:.82rem;color:var(--verm-lit)"></dd></div>';
+  $(".nv-m1", ov).textContent = o.medium;
+  $(".nv-m2", ov).textContent = o.date;
+  $(".nv-m3", ov).textContent = g.name;
+  $(".nv-m4", ov).textContent = o.acc;
+  ov.classList.add("nv-is-open");
+  document.body.style.overflow = "hidden";
+  $("#nv-ovX").focus();
+}
+
+function closeObject() {
+  ov.classList.remove("nv-is-open");
+  document.body.style.overflow = "";
+  if (lastFocus) lastFocus.focus();
+}
+
+$("#nv-ovX").addEventListener("click", closeObject);
+ov.addEventListener("click", function (e) { if (e.target === ov) closeObject(); });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape" && ov.classList.contains("nv-is-open")) closeObject(); });
+
+/* ---------- map modes ---------- */
+var gmap = $("#nv-gmap"), mMap = $("#nv-mMap"), mSat = $("#nv-mSat"), mPano = $("#nv-mPano");
+var baseSrc = "https://maps.google.com/maps?q=" + encodeURIComponent(CONFIG.placeQuery) + "&z=17&output=embed";
+
+function setMap(mode) {
+  mMap.setAttribute("aria-pressed", String(mode === "map"));
+  mSat.setAttribute("aria-pressed", String(mode === "sat"));
+  gmap.src = mode === "sat" ? baseSrc + "&t=k" : baseSrc;
+}
+mMap.addEventListener("click", function () { setMap("map"); });
+mSat.addEventListener("click", function () { setMap("sat"); });
+
+// With an Embed API key, Street View becomes an inline panorama.
+if (CONFIG.googleMapsApiKey) {
+  var sv = document.createElement("button");
+  sv.className = "nv-mbtn";
+  sv.type = "button";
+  sv.textContent = "Street View";
+  sv.addEventListener("click", function () {
+    mMap.setAttribute("aria-pressed", "false");
+    mSat.setAttribute("aria-pressed", "false");
+    sv.setAttribute("aria-pressed", "true");
+    gmap.src = "https://www.google.com/maps/embed/v1/streetview?key=" + CONFIG.googleMapsApiKey +
+      "&location=" + CONFIG.lat + "," + CONFIG.lng + "&heading=110&pitch=2&fov=90";
+  });
+  mPano.replaceWith(sv);
+}
+
+/* ---------- scroll reveal ---------- */
+if ("IntersectionObserver" in window) {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("nv-is-in"); io.unobserve(en.target); } });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
+  ROOT.querySelectorAll(".nv-rev").forEach(function (el) { io.observe(el); });
+} else {
+  ROOT.querySelectorAll(".nv-rev").forEach(function (el) { el.classList.add("nv-is-in"); });
+}
+
+/* ---------- go ---------- */
+selectRoom("art");
+renderGrid("all");
+
+/* keep the full-bleed exact against any theme container width/scrollbar */
+(function () {
+  function bleed() {
+    ROOT.style.width = document.documentElement.clientWidth + "px";
+    ROOT.style.marginLeft = "0px";
+    ROOT.style.marginLeft = (-ROOT.getBoundingClientRect().left) + "px";
+    ROOT.style.marginRight = "0px";
+  }
+  bleed();
+  window.addEventListener("resize", bleed);
+  window.addEventListener("load", bleed);
+})();
+
+</script>
+</div>
+<!-- /wp:html -->
