@@ -1,367 +1,357 @@
 <title>NMAG Virtual</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <style>
 /* ============================================================
    NMAG Virtual — National Museum & Art Gallery of Trinidad & Tobago
    Concept demo by Tweller Studios
-   Committed single-theme (marble gallery). Every colour explicit.
+   Corporate/institutional theme: navy + brass, real photography.
    ============================================================ */
 
 :root{
-  --marble:     #F7F1E4;
-  --marble-2:   #EFE5CD;
-  --marble-3:   #E4D6AF;
-  --paper:      #FCF9F1;
-  --ink:        #241F17;
-  --ink-2:      #55503F;
-  --ink-3:      #857A5E;
-  --line:       #D9C89B;
-  --line-soft:  #E7DBB6;
-  --emerald:    #1E4A3B;
-  --emerald-lit:#2E6B54;
-  --brass:      #93732C;
-  --oxblood:    #7C2C22;
-  --oxblood-lit:#9C4433;
-  --focus:      #1E4A3B;
+  --navy:       #0B1E33;
+  --navy-2:     #12283F;
+  --navy-3:     #1C3A57;
+  --navy-line:  rgba(255,255,255,.14);
+  --paper:      #F7F4EA;
+  --paper-2:    #EFEAD7;
+  --card:       #FFFFFF;
+  --ink:        #1A2430;
+  --ink-2:      #48505C;
+  --ink-3:      #767F8A;
+  --line:       #DBD4BE;
+  --line-soft:  #E7E1CC;
+  --gold:       #B9902A;
+  --gold-lit:   #D6AE3F;
+  --gold-ink:   #7A5E1B;
+  --white:      #FFFFFF;
+  --cream-70:   rgba(255,255,255,.74);
+  --focus:      #D6AE3F;
 
   --wrap: 1240px;
   --gut: clamp(20px, 5vw, 64px);
 
-  --f-display: "Bodoni Moda", "Didot", "Times New Roman", serif;
-  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-display: "Playfair Display", "Georgia", "Times New Roman", serif;
+  --f-body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --step--1: clamp(0.76rem, 0.74rem + 0.1vw, 0.82rem);
-  --step-0:  clamp(0.95rem, 0.92rem + 0.15vw, 1.03rem);
-  --step-1:  clamp(1.12rem, 1.05rem + 0.35vw, 1.32rem);
-  --step-2:  clamp(1.45rem, 1.28rem + 0.85vw, 2.05rem);
-  --step-3:  clamp(1.95rem, 1.6rem + 1.75vw, 3.1rem);
-  --step-4:  clamp(2.5rem, 1.95rem + 2.75vw, 4.6rem);
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
+  --step-0:  clamp(1rem, 0.97rem + 0.15vw, 1.07rem);
+  --step-1:  clamp(1.15rem, 1.08rem + 0.35vw, 1.34rem);
+  --step-2:  clamp(1.45rem, 1.28rem + 0.85vw, 2.02rem);
+  --step-3:  clamp(1.9rem, 1.6rem + 1.6vw, 2.9rem);
+  --step-4:  clamp(2.3rem, 1.85rem + 2.4vw, 3.9rem);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
 
 body{
   margin:0;
-  background:var(--marble);
+  background:var(--paper);
   color:var(--ink);
   font-family:var(--f-body);
   font-size:var(--step-0);
-  line-height:1.62;
+  line-height:1.65;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 
-h1,h2,h3,h4{ margin:0; font-family:var(--f-display); font-weight:400; text-wrap:balance; line-height:1.06; letter-spacing:-0.012em; }
+h1,h2,h3,h4{ margin:0; font-family:var(--f-display); font-weight:800; text-wrap:balance; line-height:1.12; letter-spacing:-0.005em; }
 p{ margin:0; }
 a{ color:inherit; }
 img{ display:block; max-width:100%; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
 
-:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; border-radius:2px; }
+:focus-visible{ outline:3px solid var(--focus); outline-offset:2px; border-radius:2px; }
 
 .wrap{ width:100%; max-width:var(--wrap); margin-inline:auto; padding-inline:var(--gut); }
 
 /* --- shared atoms ------------------------------------------------ */
 .eyebrow{
-  font-family:var(--f-mono); font-size:var(--step--1);
-  letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-3);
+  font-family:var(--f-body); font-size:.86rem; font-weight:700;
+  letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-ink);
   margin:0;
 }
-.eyebrow .tick{ color:var(--oxblood); }
+.eyebrow--on-navy{ color:var(--gold-lit); }
+.eyebrow .tick{ color:var(--gold); }
 
-.rule{ height:1px; background:var(--line-soft); border:0; margin:0; }
-
-.lede{ color:var(--ink-2); font-size:var(--step-1); line-height:1.55; max-width:62ch; }
+.lede{ color:var(--ink-2); font-size:var(--step-1); line-height:1.6; max-width:62ch; }
 
 .chip{
   display:inline-flex; align-items:center; gap:.5em;
-  font-family:var(--f-mono); font-size:var(--step--1); letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-2);
-  border:1px solid var(--line); border-radius:999px;
-  padding:.42em .9em; background:rgba(252,249,241,.7);
+  font-family:var(--f-body); font-size:.86rem; font-weight:600;
+  color:var(--ink-2);
+  border:1px solid var(--line); border-radius:4px;
+  padding:.5em 1em; background:var(--card);
 }
-.chip--demo{ color:var(--oxblood); border-color:rgba(124,44,34,.35); background:rgba(124,44,34,.07); }
+.chip--demo{ color:#8A3B1E; border-color:#E3C3A6; background:#FBF1E8; font-weight:700; }
 
 .btn{
   display:inline-flex; align-items:center; gap:.6em;
-  font-family:var(--f-body); font-weight:600; font-size:var(--step-0);
-  padding:.82em 1.5em; border-radius:2px; text-decoration:none;
-  border:1px solid transparent; transition:background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+  font-family:var(--f-body); font-weight:700; font-size:.98rem;
+  padding:.9em 1.7em; border-radius:3px; text-decoration:none;
+  border:2px solid transparent; transition:background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
 }
-.btn--solid{ background:var(--emerald); color:var(--paper); }
-.btn--solid:hover{ background:var(--emerald-lit); transform:translateY(-1px); }
-.btn--ghost{ border-color:var(--line); color:var(--ink); }
-.btn--ghost:hover{ border-color:var(--ink-3); background:rgba(36,31,23,.045); }
+.btn--gold{ background:var(--gold); color:var(--navy); }
+.btn--gold:hover{ background:var(--gold-lit); transform:translateY(-1px); }
+.btn--outline{ border-color:var(--white); color:var(--white); }
+.btn--outline:hover{ background:rgba(255,255,255,.1); }
+.btn--dark{ border-color:var(--navy); color:var(--navy); }
+.btn--dark:hover{ background:var(--navy); color:var(--white); }
 
 .arrow{ display:inline-block; transition:transform .18s ease; }
 .btn:hover .arrow{ transform:translateX(3px); }
 
+/* --- utility bar --------------------------------------------------- */
+.utility{ background:var(--navy); color:var(--cream-70); font-size:.82rem; }
+.utility__in{ display:flex; align-items:center; justify-content:space-between; gap:16px; height:38px; }
+.utility__l{ font-weight:600; letter-spacing:.02em; }
+.utility__r{ display:flex; align-items:center; gap:18px; }
+.utility__r a{ color:var(--cream-70); text-decoration:none; }
+.utility__r a:hover{ color:var(--white); }
+@media (max-width:760px){ .utility__l{ display:none; } }
+
 /* --- masthead ---------------------------------------------------- */
 .masthead{
   position:sticky; top:0; z-index:60;
-  background:rgba(247,241,228,.88); backdrop-filter:blur(14px);
+  background:rgba(255,255,255,.94); backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line-soft);
 }
 .masthead__in{
-  display:flex; align-items:center; gap:clamp(14px,3vw,34px);
-  height:64px;
+  display:flex; align-items:center; gap:clamp(12px,2.4vw,24px);
+  height:76px;
 }
-.mark{ display:flex; align-items:baseline; gap:.6em; text-decoration:none; margin-right:auto; }
-.mark__n{ font-family:var(--f-display); font-size:1.34rem; letter-spacing:.02em; }
-.mark__s{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3); }
-.mnav{ display:flex; gap:clamp(14px,2vw,26px); }
+.mark{ display:flex; align-items:center; gap:.85em; text-decoration:none; margin-right:auto; }
+.mark__logo{ width:44px; height:44px; border-radius:50%; object-fit:cover; border:1px solid var(--line); flex:0 0 auto; background:var(--paper); }
+.mark__t{ display:flex; flex-direction:column; line-height:1.2; }
+.mark__n{ font-family:var(--f-display); font-weight:800; font-size:1.08rem; color:var(--navy); }
+.mark__s{ font-family:var(--f-body); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600; }
+.mnav{ display:flex; gap:clamp(12px,1.8vw,24px); }
 .mnav a{
-  font-size:.86rem; text-decoration:none; color:var(--ink-2);
-  padding-block:.35em; border-bottom:1px solid transparent; transition:color .16s ease, border-color .16s ease;
+  font-size:.92rem; font-weight:600; text-decoration:none; color:var(--ink-2);
+  padding-block:.35em; border-bottom:2px solid transparent; transition:color .16s ease, border-color .16s ease;
 }
-.mnav a:hover{ color:var(--ink); border-bottom-color:var(--emerald); }
-@media (max-width:860px){ .mnav{ display:none; } }
-@media (max-width:520px){ .masthead__in .chip--demo{ display:none; } }
+.mnav a:hover{ color:var(--navy); border-bottom-color:var(--gold); }
+@media (max-width:920px){ .mnav{ display:none; } }
+@media (max-width:600px){ .masthead .btn{ display:none; } }
 
 /* --- hero -------------------------------------------------------- */
-.hero{ position:relative; isolation:isolate; border-bottom:1px solid var(--line-soft); }
-.hero__media{ position:absolute; inset:0; z-index:-2; overflow:hidden; }
-.hero__media img{ width:100%; height:100%; object-fit:cover; opacity:.66; filter:saturate(.86) contrast(1.01) brightness(1.04); transform:scale(1.06); animation:drift 34s ease-in-out infinite alternate; }
-@keyframes drift{ from{ transform:scale(1.06) translate3d(0,0,0); } to{ transform:scale(1.14) translate3d(-1.6%,-1.4%,0); } }
+.hero{ position:relative; isolation:isolate; }
+.hero__media{ position:absolute; inset:0; z-index:-2; overflow:hidden; background:var(--navy); }
+.hero__media img{ width:100%; height:100%; object-fit:cover; opacity:.5; }
 .hero::after{
   content:""; position:absolute; inset:0; z-index:-1;
   background:
-    radial-gradient(120% 90% at 18% 15%, rgba(247,241,228,.2) 0%, rgba(247,241,228,.86) 62%, var(--marble) 100%),
-    linear-gradient(to bottom, rgba(247,241,228,.4), rgba(247,241,228,.58) 40%, var(--marble) 96%);
+    linear-gradient(100deg, rgba(11,30,51,.97) 0%, rgba(11,30,51,.88) 34%, rgba(11,30,51,.5) 62%, rgba(11,30,51,.28) 100%),
+    linear-gradient(to top, rgba(11,30,51,.5), rgba(11,30,51,0) 40%);
 }
-.hero__in{ padding-block:clamp(48px,8vh,88px) clamp(40px,6vh,64px); display:grid; gap:clamp(20px,3vh,30px); }
-.hero h1{ font-size:var(--step-4); max-width:22ch; }
-.hero h1 em{ font-style:italic; color:var(--brass); }
-.hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }
+.hero__in{ padding-block:clamp(56px,10vh,104px) clamp(48px,7vh,80px); display:grid; gap:clamp(20px,3vh,28px); max-width:44rem; }
+.hero h1{ font-size:var(--step-4); color:var(--white); }
+.hero h1 em{ font-style:normal; color:var(--gold-lit); }
+.hero .lede{ color:var(--cream-70); }
+.hero__cta{ display:flex; flex-wrap:wrap; gap:14px; }
 .hero__facts{ display:flex; flex-wrap:wrap; gap:10px; padding-top:6px; }
+.hero__facts .chip{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.24); color:var(--cream-70); }
 
 /* --- section frame ----------------------------------------------- */
-.sec{ padding-block:clamp(58px,9vh,108px); }
-.sec--tight{ padding-block:clamp(40px,6vh,72px); }
-.sec__head{ display:grid; gap:14px; margin-bottom:clamp(28px,4.5vh,48px); }
-.sec__head h2{ font-size:var(--step-3); max-width:20ch; }
-.sec--alt{ background:var(--marble-2); border-block:1px solid var(--line-soft); }
+.sec{ padding-block:clamp(52px,8vh,96px); }
+.sec--tight{ padding-block:clamp(36px,5vh,60px); }
+.sec__head{ display:grid; gap:12px; margin-bottom:clamp(28px,4.5vh,44px); }
+.sec__head h2{ font-size:var(--step-3); max-width:22ch; color:var(--navy); }
+.sec--alt{ background:var(--paper-2); border-block:1px solid var(--line-soft); }
+.sec--navy{ background:var(--navy); color:var(--white); }
+.sec--navy .sec__head h2{ color:var(--white); }
+.sec--navy .lede{ color:var(--cream-70); }
 
-/* --- the tour ---------------------------------------------------- */
-.roomnav{
-  display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:18px;
+/* --- about / journey layout --------------------------------------- */
+.about{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) minmax(0,.86fr); gap:clamp(18px,2.6vw,30px); align-items:start; }
+@media (max-width:980px){ .about{ grid-template-columns:1fr; } }
+.about__fig{ border-radius:4px; overflow:hidden; border:1px solid var(--line); aspect-ratio:4/5; box-shadow:0 18px 36px rgba(11,30,51,.12); }
+.about__fig img{ width:100%; height:100%; object-fit:cover; }
+.about__body{ display:grid; gap:16px; align-content:start; }
+.about__body h2{ font-size:var(--step-2); color:var(--navy); }
+.about__body p{ color:var(--ink-2); font-size:.98rem; line-height:1.7; }
+
+.jt{ background:var(--card); border:1px solid var(--line); border-radius:4px; padding:clamp(18px,2vw,24px); display:grid; gap:14px; box-shadow:0 10px 24px rgba(11,30,51,.06); }
+.jt__h{ font-family:var(--f-body); font-weight:800; font-size:.92rem; letter-spacing:.05em; text-transform:uppercase; color:var(--gold-ink); border-bottom:2px solid var(--gold); padding-bottom:10px; }
+.jt__row{ display:flex; gap:12px; align-items:flex-start; }
+.jt__dot{ width:34px; height:34px; border-radius:50%; background:var(--navy); color:var(--gold-lit); display:grid; place-items:center; flex:0 0 auto; font-family:var(--f-display); font-weight:800; font-size:.86rem; }
+.jt__b{ display:grid; gap:2px; padding-top:.15em; }
+.jt__y{ font-weight:800; font-size:.9rem; color:var(--navy); }
+.jt__l{ font-size:.86rem; color:var(--ink-2); line-height:1.45; }
+
+/* --- gallery spotlight (tabs + single honest photo) ---------------- */
+.gnav{
+  display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:22px;
   scrollbar-width:thin; scrollbar-color:var(--line) transparent;
 }
-.roomnav::-webkit-scrollbar{ height:5px; }
-.roomnav::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
-.roomtab{
+.gnav::-webkit-scrollbar{ height:5px; }
+.gnav::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+.gtab{
   flex:0 0 auto; display:flex; flex-direction:column; gap:2px; align-items:flex-start;
-  padding:.6em 1em; border:1px solid var(--line-soft); border-radius:2px;
-  background:var(--paper); transition:border-color .18s ease, background .18s ease;
+  padding:.65em 1.1em; border:1px solid var(--line); border-radius:3px;
+  background:var(--card); transition:border-color .18s ease, background .18s ease;
 }
-.roomtab:hover{ border-color:var(--ink-3); }
-.roomtab__c{ font-family:var(--f-mono); font-size:.62rem; letter-spacing:.16em; color:var(--ink-3); }
-.roomtab__n{ font-size:.88rem; font-weight:500; white-space:nowrap; color:var(--ink-2); }
-.roomtab[aria-selected="true"]{ background:var(--marble-3); border-color:var(--emerald); }
-.roomtab[aria-selected="true"] .roomtab__n{ color:var(--ink); }
-.roomtab[aria-selected="true"] .roomtab__c{ color:var(--emerald); }
+.gtab:hover{ border-color:var(--navy-3); }
+.gtab__c{ font-family:var(--f-body); font-size:.68rem; font-weight:700; letter-spacing:.1em; color:var(--ink-3); }
+.gtab__n{ font-size:.92rem; font-weight:700; white-space:nowrap; color:var(--ink-2); }
+.gtab[aria-selected="true"]{ background:var(--navy); border-color:var(--navy); }
+.gtab[aria-selected="true"] .gtab__n{ color:var(--white); }
+.gtab[aria-selected="true"] .gtab__c{ color:var(--gold-lit); }
 
-.stage{ display:grid; grid-template-columns:minmax(0,1.62fr) minmax(0,1fr); gap:clamp(18px,2.4vw,30px); align-items:start; }
-@media (max-width:940px){ .stage{ grid-template-columns:1fr; } }
+.spot{ display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:clamp(20px,2.6vw,32px); align-items:stretch; }
+@media (max-width:940px){ .spot{ grid-template-columns:1fr; } }
+.spot__fig{ position:relative; border-radius:4px; overflow:hidden; border:1px solid var(--line); min-height:320px; box-shadow:0 20px 40px rgba(11,30,51,.12); }
+.spot__fig img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+.spot__cap{
+  position:absolute; left:0; right:0; bottom:0; padding:12px 16px;
+  background:linear-gradient(to top, rgba(11,30,51,.88), rgba(11,30,51,0));
+  font-size:.82rem; font-weight:600; color:var(--white);
+}
+.spot__body{ background:var(--card); border:1px solid var(--line); border-radius:4px; padding:clamp(22px,2.6vw,30px); display:grid; gap:16px; align-content:start; }
+.spot__body h3{ font-size:var(--step-2); color:var(--navy); }
+.spot__body p{ color:var(--ink-2); font-size:.96rem; line-height:1.7; }
+.spot__facts{ display:grid; gap:0; border-top:1px solid var(--line-soft); margin-top:4px; padding-top:12px; }
+.spot__facts div{ display:flex; justify-content:space-between; gap:12px; padding:.4em 0; font-size:.86rem; }
+.spot__facts dt{ color:var(--ink-3); font-weight:600; }
+.spot__facts dd{ margin:0; color:var(--ink); font-weight:700; text-align:right; }
 
-/* panorama */
-.pano{
-  position:relative; overflow:hidden; background:var(--marble-2);
-  border:1px solid var(--line); border-radius:2px;
-  height:clamp(340px,54vh,588px);
-  cursor:grab; touch-action:pan-y; user-select:none;
-}
-.pano.is-drag{ cursor:grabbing; }
-.pano__track{ position:absolute; top:0; left:0; height:100%; will-change:transform; }
-.pano__track img{ height:100%; width:auto; max-width:none; object-fit:cover; pointer-events:none; }
-.pano__vig{ position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(88% 74% at 50% 46%, transparent 46%, rgba(36,31,23,.3) 100%); }
-
-.hot{
-  position:absolute; transform:translate(-50%,-50%); z-index:3;
-  width:34px; height:34px; border-radius:50%;
-  display:grid; place-items:center;
-  font-family:var(--f-mono); font-size:.74rem; color:var(--paper);
-  background:rgba(30,74,59,.92); border:1.5px solid rgba(252,249,241,.92);
-  box-shadow:0 0 0 0 rgba(30,74,59,.55);
-  transition:transform .16s ease, background .16s ease;
-  animation:ping 2.8s ease-out infinite;
-}
-.hot:hover{ transform:translate(-50%,-50%) scale(1.16); background:var(--emerald-lit); }
-@keyframes ping{
-  0%{ box-shadow:0 0 0 0 rgba(30,74,59,.5); }
-  70%{ box-shadow:0 0 0 15px rgba(30,74,59,0); }
-  100%{ box-shadow:0 0 0 0 rgba(30,74,59,0); }
-}
-.pano__hint{
-  position:absolute; left:50%; bottom:16px; transform:translateX(-50%); z-index:4;
-  display:flex; align-items:center; gap:.55em; pointer-events:none;
-  font-family:var(--f-mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--ink-2); background:rgba(252,249,241,.86); border:1px solid var(--line);
-  padding:.5em .95em; border-radius:999px; transition:opacity .5s ease;
-}
-.pano__hint.is-gone{ opacity:0; }
-.pano__scan{
-  position:absolute; right:12px; top:12px; z-index:4;
-  font-family:var(--f-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink-3); background:rgba(252,249,241,.82); border:1px solid var(--line-soft);
-  padding:.4em .7em; border-radius:2px;
-}
-
-/* room label card */
-.label{ border:1px solid var(--line); background:var(--paper); border-radius:2px; padding:clamp(20px,2.4vw,28px); display:grid; gap:16px; }
-.label__code{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.label__code span:first-child{ font-family:var(--f-mono); font-size:.68rem; letter-spacing:.2em; color:var(--brass); }
-.label__code span:last-child{ font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; color:var(--ink-3); }
-.label h3{ font-size:var(--step-2); }
-.label p{ color:var(--ink-2); font-size:.94rem; line-height:1.65; }
-.label__objs{ display:grid; gap:2px; border-top:1px solid var(--line-soft); padding-top:14px; }
-.label__objs > .eyebrow{ margin-bottom:6px; }
-.objline{
-  display:flex; align-items:center; gap:12px; width:100%; text-align:left;
-  padding:.6em 0; border-bottom:1px solid var(--line-soft);
-  transition:padding-left .18s ease, color .18s ease;
-}
-.objline:last-child{ border-bottom:0; }
-.objline:hover{ padding-left:6px; }
-.objline__n{ font-family:var(--f-mono); font-size:.7rem; color:var(--emerald); width:1.4em; flex:0 0 auto; }
-.objline__t{ font-size:.9rem; color:var(--ink-2); }
-.objline:hover .objline__t{ color:var(--ink); }
-
-/* --- collection grid --------------------------------------------- */
+/* --- holdings grid -------------------------------------------------- */
 .filters{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }
 .filt{
-  font-family:var(--f-mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--ink-3); border:1px solid var(--line-soft); border-radius:999px; padding:.5em 1em;
+  font-family:var(--f-body); font-size:.82rem; font-weight:600;
+  color:var(--ink-2); border:1px solid var(--line); border-radius:3px; padding:.55em 1.1em;
   transition:color .16s ease, border-color .16s ease, background .16s ease;
 }
-.filt:hover{ color:var(--ink-2); border-color:var(--ink-3); }
-.filt[aria-pressed="true"]{ color:var(--paper); background:var(--ink); border-color:var(--ink); }
+.filt:hover{ border-color:var(--navy-3); }
+.filt[aria-pressed="true"]{ color:var(--white); background:var(--navy); border-color:var(--navy); }
 
-.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:clamp(12px,1.6vw,20px); }
-.card{ display:grid; gap:0; text-align:left; border:1px solid var(--line-soft); background:var(--paper); border-radius:2px; overflow:hidden; box-shadow:0 1px 2px rgba(36,31,23,.05); transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
-.card:hover{ border-color:var(--ink-3); transform:translateY(-3px); box-shadow:0 16px 30px rgba(36,31,23,.13); }
-.card__fig{ position:relative; aspect-ratio:4/5; overflow:hidden; background:var(--marble-2); }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:clamp(14px,1.8vw,22px); }
+.card{ display:grid; gap:0; text-align:left; border:1px solid var(--line); background:var(--card); border-radius:4px; overflow:hidden; box-shadow:0 1px 3px rgba(11,30,51,.06); transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.card:hover{ border-color:var(--navy-3); transform:translateY(-3px); box-shadow:0 18px 32px rgba(11,30,51,.14); }
+.card__fig{ position:relative; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); }
 .card__fig img{ width:100%; height:100%; object-fit:cover; transition:transform .5s cubic-bezier(.2,.7,.3,1); }
-.card:hover .card__fig img{ transform:scale(1.055); }
+.card:hover .card__fig img{ transform:scale(1.05); }
 .card__tag{
   position:absolute; left:10px; top:10px;
-  font-family:var(--f-mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--paper); background:rgba(36,31,23,.72);
-  padding:.32em .62em; border-radius:2px;
+  font-family:var(--f-body); font-size:.66rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--navy); background:var(--gold-lit);
+  padding:.32em .62em; border-radius:3px;
 }
-.card__body{ padding:14px 15px 16px; display:grid; gap:5px; }
-.card__t{ font-family:var(--f-display); font-size:1.06rem; line-height:1.2; }
-.card__m{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.06em; color:var(--ink-3); }
+.card__body{ padding:15px 16px 17px; display:grid; gap:6px; }
+.card__t{ font-family:var(--f-display); font-weight:700; font-size:1.05rem; line-height:1.25; color:var(--navy); }
+.card__m{ font-family:var(--f-body); font-size:.8rem; font-weight:500; color:var(--ink-3); }
 
 /* --- cazabon feature --------------------------------------------- */
-.feat{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.04fr); gap:clamp(22px,4vw,64px); align-items:center; }
+.feat{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(16px,2vw,22px); }
 @media (max-width:880px){ .feat{ grid-template-columns:1fr; } }
-.feat__art{ position:relative; border:1px solid var(--line); border-radius:2px; overflow:hidden; aspect-ratio:5/4; box-shadow:0 20px 40px rgba(36,31,23,.1); }
+.feat__art{ position:relative; border-radius:4px; overflow:hidden; border:1px solid var(--line); aspect-ratio:4/5; box-shadow:0 20px 40px rgba(11,30,51,.12); }
 .feat__art img{ width:100%; height:100%; object-fit:cover; }
 .feat__cap{
-  position:absolute; left:0; right:0; bottom:0; padding:14px 16px;
-  background:linear-gradient(to top, rgba(36,31,23,.86), rgba(36,31,23,0));
-  font-family:var(--f-mono); font-size:.66rem; letter-spacing:.08em; color:var(--paper);
+  position:absolute; left:0; right:0; bottom:0; padding:12px 14px;
+  background:linear-gradient(to top, rgba(11,30,51,.88), rgba(11,30,51,0));
+  font-size:.76rem; font-weight:600; color:var(--white);
 }
-.feat__body{ display:grid; gap:20px; }
-.feat__body h2{ font-size:var(--step-3); }
-.feat__body h2 em{ font-style:italic; color:var(--brass); }
-.dates{ font-family:var(--f-mono); font-size:.72rem; letter-spacing:.14em; color:var(--ink-3); }
-.pull{ border-left:2px solid var(--emerald); padding-left:18px; font-family:var(--f-display); font-style:italic; font-size:var(--step-1); line-height:1.42; color:var(--ink); }
+.feat__body{ display:grid; gap:18px; grid-column:1 / -1; margin-top:6px; }
+.feat__body h2{ font-size:var(--step-3); color:var(--navy); }
+.feat__body h2 em{ font-style:normal; color:var(--gold-ink); }
+.dates{ font-family:var(--f-body); font-size:.86rem; font-weight:700; letter-spacing:.03em; color:var(--ink-3); }
+.pull{ border-left:4px solid var(--gold); padding-left:18px; font-family:var(--f-display); font-weight:600; font-style:italic; font-size:var(--step-1); line-height:1.5; color:var(--navy); }
+.feat__pair{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(16px,2vw,22px); }
+@media (max-width:640px){ .feat__pair{ grid-template-columns:1fr; } }
 
-/* --- timeline ---------------------------------------------------- */
+/* --- timeline (full) ---------------------------------------------- */
 .tl{ display:grid; gap:0; border-top:1px solid var(--line-soft); }
 .tl__row{
   display:grid; grid-template-columns:120px minmax(0,1fr); gap:clamp(16px,3vw,44px);
   padding-block:clamp(18px,2.6vh,26px); border-bottom:1px solid var(--line-soft);
 }
 @media (max-width:640px){ .tl__row{ grid-template-columns:1fr; gap:6px; } }
-.tl__y{ font-family:var(--f-mono); font-size:.86rem; letter-spacing:.1em; color:var(--brass); padding-top:.2em; }
-.tl__b h4{ font-size:var(--step-1); margin-bottom:6px; }
-.tl__b p{ color:var(--ink-2); font-size:.93rem; max-width:64ch; }
+.tl__y{ font-family:var(--f-display); font-weight:800; font-size:1rem; color:var(--gold-ink); padding-top:.1em; }
+.tl__b h4{ font-size:var(--step-1); margin-bottom:6px; color:var(--navy); }
+.tl__b p{ color:var(--ink-2); font-size:.94rem; max-width:64ch; }
 
 /* --- map / visit -------------------------------------------------- */
 .visit{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:clamp(18px,2.6vw,32px); align-items:start; }
 @media (max-width:940px){ .visit{ grid-template-columns:1fr; } }
-.mapbox{ border:1px solid var(--line); border-radius:2px; overflow:hidden; background:var(--marble-2); }
-.mapbox__bar{ display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line-soft); background:var(--paper); flex-wrap:wrap; }
+.mapbox{ border:1px solid var(--line); border-radius:4px; overflow:hidden; background:var(--paper-2); box-shadow:0 10px 24px rgba(11,30,51,.08); }
+.mapbox__bar{ display:flex; align-items:center; gap:8px; padding:12px 14px; border-bottom:1px solid var(--line-soft); background:var(--card); flex-wrap:wrap; }
 .mapbox__bar .eyebrow{ margin-right:auto; }
 .mbtn{
-  font-family:var(--f-mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--ink-3); border:1px solid var(--line-soft); padding:.44em .8em; border-radius:2px;
+  font-family:var(--f-body); font-size:.78rem; font-weight:600;
+  color:var(--ink-2); border:1px solid var(--line); padding:.5em .9em; border-radius:3px;
   text-decoration:none; transition:color .16s ease, border-color .16s ease, background .16s ease;
 }
-.mbtn:hover{ color:var(--ink); border-color:var(--ink-3); }
-.mbtn[aria-pressed="true"]{ color:var(--paper); background:var(--ink); border-color:var(--ink); }
+.mbtn:hover{ color:var(--navy); border-color:var(--navy-3); }
+.mbtn[aria-pressed="true"]{ color:var(--white); background:var(--navy); border-color:var(--navy); }
 .mapbox__frame{ position:relative; height:clamp(320px,46vh,486px); }
-.mapbox__frame iframe{ width:100%; height:100%; border:0; display:block; filter:saturate(.92) contrast(1.02) brightness(1.02); }
+.mapbox__frame iframe{ width:100%; height:100%; border:0; display:block; }
 
-.info{ display:grid; gap:0; border:1px solid var(--line); border-radius:2px; background:var(--paper); }
+.info{ display:grid; gap:0; border:1px solid var(--line); border-radius:4px; background:var(--card); box-shadow:0 10px 24px rgba(11,30,51,.08); }
 .info__row{ display:grid; gap:5px; padding:16px 18px; border-bottom:1px solid var(--line-soft); }
 .info__row:last-child{ border-bottom:0; }
-.info__v{ font-size:.94rem; color:var(--ink); }
-.info__v a{ color:var(--ink); text-decoration-color:var(--line); text-underline-offset:3px; }
-.info__v a:hover{ text-decoration-color:var(--emerald); }
-.info__v .mono{ font-family:var(--f-mono); font-size:.84rem; }
+.info__v{ font-size:.96rem; color:var(--ink); font-weight:500; }
+.info__v a{ color:var(--navy); text-decoration-color:var(--line); text-underline-offset:3px; font-weight:700; }
+.info__v a:hover{ text-decoration-color:var(--gold); }
+.info__v .mono{ font-family:var(--f-mono); font-size:.86rem; }
 
 .branches{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:clamp(18px,2.6vh,26px); }
-.branch{ border:1px solid var(--line-soft); border-radius:2px; padding:15px 16px; background:var(--paper); display:grid; gap:5px; }
-.branch__n{ font-family:var(--f-display); font-size:1.02rem; }
-.branch__l{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.08em; color:var(--ink-3); }
+.branch{ border:1px solid var(--line-soft); border-radius:4px; padding:16px 17px; background:var(--card); display:grid; gap:5px; }
+.branch__n{ font-family:var(--f-display); font-weight:700; font-size:1.02rem; color:var(--navy); }
+.branch__l{ font-family:var(--f-body); font-size:.8rem; font-weight:600; color:var(--ink-3); }
 
 /* --- object overlay ---------------------------------------------- */
 .ov{
   position:fixed; inset:0; z-index:100; display:none;
-  background:rgba(36,31,23,.4); backdrop-filter:blur(9px);
+  background:rgba(11,30,51,.6); backdrop-filter:blur(6px);
   padding:clamp(14px,4vh,44px); overflow-y:auto;
 }
 .ov.is-open{ display:grid; place-items:center; }
 .ov__panel{
-  width:min(1000px,100%); background:var(--paper); border:1px solid var(--line); border-radius:2px;
+  width:min(1000px,100%); background:var(--card); border:1px solid var(--line); border-radius:4px;
   display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,1fr); overflow:hidden;
-  box-shadow:0 30px 70px rgba(36,31,23,.28);
+  box-shadow:0 30px 70px rgba(11,30,51,.35);
   animation:rise .3s cubic-bezier(.2,.75,.3,1);
 }
 @keyframes rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
 @media (max-width:800px){ .ov__panel{ grid-template-columns:1fr; } }
-.ov__fig{ background:var(--marble-2); min-height:260px; }
+.ov__fig{ background:var(--paper-2); min-height:260px; }
 .ov__fig img{ width:100%; height:100%; object-fit:cover; max-height:74vh; }
 .ov__body{ padding:clamp(22px,3vw,34px); display:grid; gap:16px; align-content:start; }
-.ov__body h3{ font-size:var(--step-2); }
-.ov__body p{ color:var(--ink-2); font-size:.94rem; line-height:1.66; }
+.ov__body h3{ font-size:var(--step-2); color:var(--navy); }
+.ov__body p{ color:var(--ink-2); font-size:.96rem; line-height:1.7; }
 .ov__meta{ display:grid; gap:0; border-top:1px solid var(--line-soft); }
-.ov__meta div{ display:grid; grid-template-columns:112px 1fr; gap:14px; padding:.62em 0; border-bottom:1px solid var(--line-soft); }
-.ov__meta dt{ font-family:var(--f-mono); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); padding-top:.24em; }
-.ov__meta dd{ margin:0; font-size:.9rem; color:var(--ink); }
+.ov__meta div{ display:grid; grid-template-columns:120px 1fr; gap:14px; padding:.62em 0; border-bottom:1px solid var(--line-soft); }
+.ov__meta dt{ font-family:var(--f-body); font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); padding-top:.24em; }
+.ov__meta dd{ margin:0; font-size:.92rem; color:var(--ink); font-weight:500; }
 .ov__x{
   position:absolute; right:clamp(14px,4vh,44px); top:clamp(14px,4vh,44px); z-index:101;
   width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
-  border:1px solid var(--line); background:rgba(252,249,241,.92); color:var(--ink); font-size:1.1rem;
+  border:1px solid var(--line); background:var(--card); color:var(--navy); font-size:1.1rem;
 }
-.ov__x:hover{ border-color:var(--ink-3); background:var(--marble-2); }
+.ov__x:hover{ border-color:var(--navy-3); background:var(--paper-2); }
 
 /* --- notice + footer ---------------------------------------------- */
 .notice{
-  border:1px solid rgba(124,44,34,.28); background:rgba(124,44,34,.05);
-  border-radius:2px; padding:clamp(20px,2.6vw,28px); display:grid; gap:12px;
+  border:1px solid #E3C3A6; background:#FBF1E8;
+  border-radius:4px; padding:clamp(20px,2.6vw,28px); display:grid; gap:12px;
 }
-.notice h4{ font-family:var(--f-body); font-weight:600; font-size:.98rem; letter-spacing:.01em; color:var(--ink); }
-.notice p{ color:var(--ink-2); font-size:.9rem; line-height:1.66; max-width:82ch; }
-.notice ul{ margin:0; padding-left:1.1em; color:var(--ink-2); font-size:.9rem; line-height:1.7; display:grid; gap:4px; }
+.notice h4{ font-family:var(--f-body); font-weight:800; font-size:1rem; color:var(--navy); }
+.notice p{ color:var(--ink-2); font-size:.92rem; line-height:1.7; max-width:82ch; }
+.notice ul{ margin:0; padding-left:1.1em; color:var(--ink-2); font-size:.92rem; line-height:1.75; display:grid; gap:5px; }
 
-.foot{ border-top:1px solid var(--line-soft); padding-block:clamp(38px,6vh,64px) 34px; background:var(--marble-2); }
-.foot__top{ display:flex; flex-wrap:wrap; gap:22px; justify-content:space-between; align-items:flex-end; margin-bottom:30px; }
-.foot__mark{ display:grid; gap:6px; }
-.foot__mark .m{ font-family:var(--f-display); font-size:1.5rem; }
-.foot__cred{ font-size:.84rem; color:var(--ink-3); max-width:46ch; line-height:1.7; }
-.foot__cred a{ color:var(--ink-2); text-decoration-color:var(--line); text-underline-offset:3px; }
-.foot__cred a:hover{ color:var(--ink); text-decoration-color:var(--emerald); }
-.foot__bar{ display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; border-top:1px solid var(--line-soft); padding-top:20px; font-family:var(--f-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.foot{ padding-block:clamp(38px,6vh,60px) 30px; background:var(--navy); color:var(--cream-70); }
+.foot__top{ display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-start; margin-bottom:28px; }
+.foot__mark{ display:flex; align-items:center; gap:12px; }
+.foot__mark img{ width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid var(--navy-line); }
+.foot__mark .m{ font-family:var(--f-display); font-weight:800; font-size:1.2rem; color:var(--white); }
+.foot__mark .s{ font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--cream-70); font-weight:600; }
+.foot__cred{ font-size:.82rem; max-width:52ch; line-height:1.8; }
+.foot__cred a{ color:var(--gold-lit); text-decoration-color:rgba(214,174,63,.4); text-underline-offset:3px; }
+.foot__cred a:hover{ color:var(--white); text-decoration-color:var(--white); }
+.foot__bar{ display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; border-top:1px solid var(--navy-line); padding-top:20px; font-size:.78rem; font-weight:600; letter-spacing:.02em; }
 
 /* --- scroll reveal (rests visible) -------------------------------- */
 .rev{ opacity:1; transform:none; }
@@ -371,28 +361,40 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
   html.no-js .rev{ opacity:1; transform:none; }
 }
 @media (prefers-reduced-motion:reduce){
-  .hero__media img{ animation:none; }
-  .hot{ animation:none; }
   *{ scroll-behavior:auto !important; }
 }
 html{ scroll-behavior:smooth; }
 </style>
 
+<!-- ================= UTILITY BAR ================= -->
+<div class="utility">
+  <div class="wrap utility__in">
+    <span class="utility__l">National Museum &amp; Art Gallery of Trinidad and Tobago</span>
+    <div class="utility__r">
+      <span class="chip chip--demo" style="padding:.3em .8em">Concept Demo</span>
+      <a href="tel:+18686121064">+1 868 612 1064</a>
+    </div>
+  </div>
+</div>
+
 <!-- ================= MASTHEAD ================= -->
 <header class="masthead">
   <div class="wrap masthead__in">
     <a class="mark" href="#top">
-      <span class="mark__n">NMAG</span>
-      <span class="mark__s">Virtual</span>
+      <img class="mark__logo" src="https://www.twellerstudios.com/wp-content/uploads/2026/09/national-museum-and-art-gallery-of-trinidad-and-tobago-offic.jpg" alt="National Museum and Art Gallery of Trinidad and Tobago official emblem">
+      <span class="mark__t">
+        <span class="mark__n">NMAG Virtual</span>
+        <span class="mark__s">Est. 1892 &middot; Port of Spain</span>
+      </span>
     </a>
     <nav class="mnav" aria-label="Sections">
-      <a href="#tour">The Tour</a>
-      <a href="#collection">Collection</a>
+      <a href="#about">About</a>
+      <a href="#galleries">Galleries</a>
+      <a href="#holdings">Holdings</a>
       <a href="#cazabon">Cazabon</a>
-      <a href="#building">The Building</a>
       <a href="#visit">Visit</a>
     </nav>
-    <span class="chip chip--demo">Concept Demo</span>
+    <a class="btn btn--dark" href="#visit">Plan Your Visit</a>
   </div>
 </header>
 
@@ -401,15 +403,15 @@ html{ scroll-behavior:smooth; }
   <!-- ================= HERO ================= -->
   <section class="hero">
     <div class="hero__media">
-      <img src="https://images.unsplash.com/photo-1782603090066-7455a1e777b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400" alt="A long vaulted museum corridor lit by warm ambient light.">
+      <img src="https://www.twellerstudios.com/wp-content/uploads/2026/09/the-national-museum-and-art-gallery-of-trinidad-and-tobago-t.jpg" alt="The National Museum and Art Gallery of Trinidad and Tobago, the former Royal Victoria Institute, Port of Spain.">
     </div>
     <div class="wrap hero__in">
-      <p class="eyebrow"><span class="tick">&#9679;</span> Royal Victoria Institute &middot; Port of Spain &middot; Est. 1892</p>
-      <h1>The doors are closed.<br>The collection <em>isn&rsquo;t</em>.</h1>
-      <p class="lede">A virtual tour of the National Museum &amp; Art Gallery of Trinidad and Tobago &mdash; seven galleries, some ten thousand objects, and 130 years of the Royal Victoria Institute, walkable from anywhere in the world.</p>
+      <p class="eyebrow eyebrow--on-navy"><span class="tick">&#9679;</span> Royal Victoria Institute &middot; Est. 1892</p>
+      <h1>Discover our past.<br>Understand our present.<br><em>Inspire our future.</em></h1>
+      <p class="lede">A virtual tour concept for the National Museum &amp; Art Gallery of Trinidad and Tobago &mdash; seven galleries and 130 years of the Royal Victoria Institute, walkable from anywhere in the world.</p>
       <div class="hero__cta">
-        <a class="btn btn--solid" href="#tour">Begin the tour <span class="arrow">&rarr;</span></a>
-        <a class="btn btn--ghost" href="#visit">See the building <span class="arrow">&rarr;</span></a>
+        <a class="btn btn--gold" href="#galleries">Explore the galleries <span class="arrow">&rarr;</span></a>
+        <a class="btn btn--outline" href="#visit">Plan your visit <span class="arrow">&rarr;</span></a>
       </div>
       <div class="hero__facts">
         <span class="chip">7 galleries</span>
@@ -420,40 +422,80 @@ html{ scroll-behavior:smooth; }
     </div>
   </section>
 
-  <!-- ================= THE TOUR ================= -->
-  <section class="sec" id="tour">
+  <!-- ================= ABOUT / JOURNEY THROUGH TIME ================= -->
+  <section class="sec" id="about">
     <div class="wrap">
-      <div class="sec__head rev">
-        <p class="eyebrow">01 &mdash; Walk the rooms</p>
-        <h2>Seven galleries, one continuous floor.</h2>
-        <p class="lede">Choose a room and look around. Drag the view to pan the space; the numbered markers open the object label, exactly as the wall card would in the building itself.</p>
-      </div>
-
-      <div class="roomnav" role="tablist" aria-label="Galleries" id="roomnav"></div>
-
-      <div class="stage">
-        <div>
-          <div class="pano" id="pano" tabindex="0" role="img" aria-label="Panoramic view of the selected gallery. Drag or use arrow keys to look around.">
-            <div class="pano__track" id="panoTrack"></div>
-            <div class="pano__vig"></div>
-            <span class="pano__scan" id="panoScan">G1 &middot; 360&deg;</span>
-            <div class="pano__hint" id="panoHint">
-              <span>&#8596;</span><span>Drag to look around</span>
-            </div>
+      <div class="about rev">
+        <div class="about__fig">
+          <img src="https://www.twellerstudios.com/wp-content/uploads/2026/09/the-national-museum-and-art-gallery-of-trinidad-and-tobago-t.jpg" alt="The National Museum and Art Gallery building, Frederick Street, Port of Spain.">
+        </div>
+        <div class="about__body">
+          <p class="eyebrow">About the museum</p>
+          <h2>Preserving our story, building our community.</h2>
+          <p>Opened in 1892 as the Royal Victoria Institute, the museum has spent more than a century collecting, conserving and presenting Trinidad and Tobago&rsquo;s human and natural heritage &mdash; from the nation&rsquo;s earliest settlers to its Carnival arts and petroleum economy.</p>
+          <p>We are dedicated to the pillars of museum practice &mdash; research, collection, conservation, interpretation and exhibition &mdash; to educate, inspire and strengthen our community.</p>
+          <a class="btn btn--dark" href="#galleries">Learn more about the galleries <span class="arrow">&rarr;</span></a>
+        </div>
+        <div class="jt">
+          <p class="jt__h">A journey through time</p>
+          <div class="jt__row">
+            <span class="jt__dot">1892</span>
+            <span class="jt__b"><span class="jt__y">The Royal Victoria Institute opens</span><span class="jt__l">Built for Queen Victoria&rsquo;s jubilee, on Frederick Street.</span></span>
+          </div>
+          <div class="jt__row">
+            <span class="jt__dot">1920</span>
+            <span class="jt__b"><span class="jt__y">Fire</span><span class="jt__l">The building is gutted; much of the original holding is lost.</span></span>
+          </div>
+          <div class="jt__row">
+            <span class="jt__dot">1923</span>
+            <span class="jt__b"><span class="jt__y">Rebuilt</span><span class="jt__l">Reconstruction restores the Institute on the same ground.</span></span>
+          </div>
+          <div class="jt__row">
+            <span class="jt__dot">1965</span>
+            <span class="jt__b"><span class="jt__y">Renamed</span><span class="jt__l">Three years after independence, the national museum is born.</span></span>
+          </div>
+          <div class="jt__row">
+            <span class="jt__dot">Today</span>
+            <span class="jt__b"><span class="jt__y">Closed for renovation</span><span class="jt__l">A virtual floor keeps the collection open in the meantime.</span></span>
           </div>
         </div>
-        <div class="label" id="roomLabel"></div>
       </div>
     </div>
   </section>
 
-  <!-- ================= COLLECTION ================= -->
-  <section class="sec sec--alt" id="collection">
+  <!-- ================= GALLERIES ================= -->
+  <section class="sec sec--alt" id="galleries">
     <div class="wrap">
       <div class="sec__head rev">
-        <p class="eyebrow">02 &mdash; The collection</p>
-        <h2>Objects held across the seven rooms.</h2>
-        <p class="lede">Filter by gallery. Every tile opens a full object record &mdash; the same fields the museum&rsquo;s catalogue carries.</p>
+        <p class="eyebrow">Explore &middot; Seven galleries</p>
+        <h2>One collection, seven stories.</h2>
+        <p class="lede">Select a gallery to see what it holds. Photography below is real and correctly matched to each subject &mdash; see the notice further down the page for exactly what that means.</p>
+      </div>
+
+      <div class="gnav" role="tablist" aria-label="Galleries" id="gnav"></div>
+
+      <div class="spot rev">
+        <div class="spot__fig">
+          <img id="spotImg" src="" alt="">
+          <span class="spot__cap" id="spotCap"></span>
+        </div>
+        <div class="spot__body">
+          <p class="eyebrow" id="spotCode"></p>
+          <h3 id="spotTitle"></h3>
+          <p id="spotText"></p>
+          <dl class="spot__facts" id="spotFacts"></dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOLDINGS ================= -->
+  <section class="sec" id="holdings">
+    <div class="wrap">
+      <div class="sec__head rev">
+        <p class="eyebrow">Featured holdings</p>
+        <h2>Real photography, correctly matched.</h2>
+        <p class="lede">Filter by gallery. Paintings shown are genuinely by Cazabon and genuinely described as held by the museum; other photographs are real, accurately captioned reference images &mdash; not photographs of the specific object on the museum&rsquo;s shelf.</p>
       </div>
       <div class="filters" id="filters"></div>
       <div class="grid" id="grid"></div>
@@ -461,31 +503,35 @@ html{ scroll-behavior:smooth; }
   </section>
 
   <!-- ================= CAZABON ================= -->
-  <section class="sec" id="cazabon">
+  <section class="sec sec--alt" id="cazabon">
     <div class="wrap">
       <div class="feat rev">
         <div class="feat__art">
-          <img src="https://images.unsplash.com/photo-1572953109213-3be62398eb95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600" alt="Visitors moving along a hung gallery corridor.">
-          <div class="feat__cap">The Art Gallery &middot; hang rotates seasonally</div>
+          <img src="https://www.twellerstudios.com/wp-content/uploads/2026/09/on-the-caroni-trinidad-watercolour-by-michel-jean-cazabon-scaled.jpg" alt="On the Caroni, Trinidad — watercolour by Michel-Jean Cazabon.">
+          <span class="feat__cap">On the Caroni, Trinidad &middot; Michel-Jean Cazabon</span>
+        </div>
+        <div class="feat__art">
+          <img src="https://www.twellerstudios.com/wp-content/uploads/2026/09/the-red-house-port-of-spain-painting-by-michel-jean-cazabon-scaled.jpg" alt="The Red House, Port of Spain, 1849 — painting by Michel-Jean Cazabon.">
+          <span class="feat__cap">The Red House, Port of Spain, 1849 &middot; Michel-Jean Cazabon</span>
         </div>
         <div class="feat__body">
-          <p class="eyebrow">03 &mdash; Featured artist</p>
+          <p class="eyebrow">Featured artist</p>
           <h2>Michel-Jean <em>Cazabon</em></h2>
           <p class="dates">1813 &ndash; 1888 &middot; Naparima, Trinidad</p>
           <p class="lede" style="font-size:var(--step-0)">Trinidad&rsquo;s first internationally known painter. Cazabon trained in Paris under Paul Delaroche &mdash; having been sent to study medicine and quietly switched to fine art &mdash; then returned home and spent his career painting the island: the Caroni river, the Port of Spain docks, the estate houses and bamboo arches of the northern valleys.</p>
           <p class="pull">Photography did not reach Trinidad in any quantity until after his death. Cazabon&rsquo;s watercolours are, for much of the nineteenth century, the closest thing the country has to a photographic record of itself.</p>
           <p class="lede" style="font-size:var(--step-0)">The museum holds a dedicated Cazabon gallery. Other works sit in private collections across Trinidad and abroad, and in the Louvre.</p>
-          <a class="btn btn--ghost" href="https://artsandculture.google.com/entity/michel-jean-cazabon/m05v6g3" target="_blank" rel="noopener">Cazabon on Google Arts &amp; Culture <span class="arrow">&#8599;</span></a>
+          <a class="btn btn--dark" href="https://artsandculture.google.com/entity/michel-jean-cazabon/m05v6g3" target="_blank" rel="noopener">Cazabon on Google Arts &amp; Culture <span class="arrow">&#8599;</span></a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= BUILDING ================= -->
-  <section class="sec sec--alt" id="building">
+  <!-- ================= BUILDING TIMELINE (full) ================= -->
+  <section class="sec" id="building">
     <div class="wrap">
       <div class="sec__head rev">
-        <p class="eyebrow">04 &mdash; The building</p>
+        <p class="eyebrow">The building</p>
         <h2>A German Renaissance hall at the top of Frederick Street.</h2>
         <p class="lede">Designed by Daniel Meinerts Hahn, Chief Draughtsman of the Public Works Department &mdash; Dutch gables and a slate roof, built for the tropics and named for a queen&rsquo;s jubilee.</p>
       </div>
@@ -523,7 +569,7 @@ html{ scroll-behavior:smooth; }
           <div class="tl__b">
             <h4>Closed for renovation</h4>
             <p>The main building is currently closed to the public for restoration works &mdash; which is precisely the argument for a virtual tour. A digital floor keeps the collection open while the physical one is shut, and stays open to schools, the diaspora and researchers long after the scaffolding comes down.</p>
-            <p style="margin-top:10px"><a href="https://nationaltrust.tt/location/royal-victoria-institute/" target="_blank" rel="noopener" style="font-size:.88rem;color:var(--ink);text-decoration-color:var(--line);text-underline-offset:3px">Royal Victoria Institute &mdash; National Trust of Trinidad &amp; Tobago &#8599;</a></p>
+            <p style="margin-top:10px"><a href="https://nationaltrust.tt/location/royal-victoria-institute/" target="_blank" rel="noopener" style="font-size:.9rem;color:var(--navy);font-weight:700;text-decoration-color:var(--line);text-underline-offset:3px">Royal Victoria Institute &mdash; National Trust of Trinidad &amp; Tobago &#8599;</a></p>
           </div>
         </div>
       </div>
@@ -531,10 +577,10 @@ html{ scroll-behavior:smooth; }
   </section>
 
   <!-- ================= VISIT / MAP ================= -->
-  <section class="sec" id="visit">
+  <section class="sec sec--alt" id="visit">
     <div class="wrap">
       <div class="sec__head rev">
-        <p class="eyebrow">05 &mdash; Arrive</p>
+        <p class="eyebrow">Arrive</p>
         <h2>Step outside the building before you step in.</h2>
         <p class="lede">The tour begins on the pavement. Pan the map, drop into Street View, and approach the fa&ccedil;ade the way a visitor walking up Frederick Street would.</p>
       </div>
@@ -559,7 +605,7 @@ html{ scroll-behavior:smooth; }
           </div>
           <div class="info__row">
             <p class="eyebrow">Opening hours</p>
-            <p class="info__v">Tuesday &ndash; Saturday, 10:00 &ndash; 18:00<br><span class="mono" style="color:var(--ink-3)">Closed Sun &amp; Mon</span></p>
+            <p class="info__v">Tuesday &ndash; Saturday, 10:00 &ndash; 18:00<br><span class="mono" style="color:var(--ink-3);font-weight:400">Closed Sun &amp; Mon</span></p>
           </div>
           <div class="info__row">
             <p class="eyebrow">Admission</p>
@@ -571,7 +617,7 @@ html{ scroll-behavior:smooth; }
           </div>
           <div class="info__row">
             <p class="eyebrow">Getting there</p>
-            <p class="info__v" style="color:var(--ink-2);font-size:.9rem">At the top of Frederick Street, facing Memorial Park and a short walk south of the Queen&rsquo;s Park Savannah.</p>
+            <p class="info__v" style="color:var(--ink-2);font-size:.92rem;font-weight:400">At the top of Frederick Street, facing Memorial Park and a short walk south of the Queen&rsquo;s Park Savannah.</p>
           </div>
         </div>
       </div>
@@ -598,14 +644,14 @@ html{ scroll-behavior:smooth; }
   <section class="sec sec--tight">
     <div class="wrap">
       <div class="notice rev">
-        <p class="eyebrow" style="color:var(--oxblood-lit)">Read this first</p>
+        <p class="eyebrow" style="color:#8A3B1E">Read this first</p>
         <h4>This is a concept demo, not a museum publication.</h4>
-        <p>Built by Tweller Studios to show the National Museum &amp; Art Gallery what a virtual tour of their collection could be. The framework is real and working; the contents are stand-ins.</p>
+        <p>Built by Tweller Studios to show the National Museum &amp; Art Gallery what a virtual tour of their collection could be. The framework is real and working; the museum has not reviewed or approved this page.</p>
         <ul>
           <li><strong style="color:var(--ink)">The history is real.</strong> Dates, architecture, gallery themes, Cazabon, the Angostura puncheon, the branch museums and the visitor details are drawn from published sources.</li>
-          <li><strong style="color:var(--ink)">The photography is not.</strong> Every image here is a licensed stock photograph standing in for an object NMAG actually holds. None of them depicts a real item in the collection.</li>
-          <li><strong style="color:var(--ink)">The object records are illustrative.</strong> Accession numbers are marked <span class="mono" style="font-family:var(--f-mono);color:var(--oxblood)">DEMO</span> and are placeholders for the museum&rsquo;s own catalogue data.</li>
-          <li><strong style="color:var(--ink)">In production</strong>, the panoramas would be true 360&deg; captures of each room, the objects photographed on site, and the records fed from the museum&rsquo;s collections management system.</li>
+          <li><strong style="color:var(--ink)">The photography is real, but not all of it is the specific object.</strong> The building photo, both Cazabon paintings, and the museum&rsquo;s emblem are the genuine article, sourced from Wikimedia Commons and the museum&rsquo;s public Facebook page. The Pitch Lake, Angostura bottle, scarlet ibis, ocelot, steelband and Carnival photographs are real, correctly matched reference photography &mdash; not photographs of the individual pieces the museum holds.</li>
+          <li><strong style="color:var(--ink)">The First Peoples image is representative.</strong> It shows a Caribbean zemi figure of the general period and region, not a piece from NMAG&rsquo;s own archaeology collection.</li>
+          <li><strong style="color:var(--ink)">In production</strong>, every photograph would be the museum&rsquo;s own &mdash; the actual objects, on the actual shelf, shot on site.</li>
         </ul>
       </div>
     </div>
@@ -632,36 +678,31 @@ html{ scroll-behavior:smooth; }
   <div class="wrap">
     <div class="foot__top">
       <div class="foot__mark">
-        <span class="m">NMAG Virtual</span>
-        <span class="eyebrow">A concept by Tweller Studios</span>
+        <img src="https://www.twellerstudios.com/wp-content/uploads/2026/09/national-museum-and-art-gallery-of-trinidad-and-tobago-offic.jpg" alt="National Museum and Art Gallery emblem">
+        <span>
+          <span class="m" style="display:block">NMAG Virtual</span>
+          <span class="s">A concept by Tweller Studios</span>
+        </span>
       </div>
       <p class="foot__cred" id="credits">
-        Stand-in photography from Unsplash, by
-        <a href="https://unsplash.com/@by_danny_g" target="_blank" rel="noopener">Danny Greenberg</a>,
-        <a href="https://unsplash.com/@amyb99" target="_blank" rel="noopener">Amy-Leigh Barnard</a>,
-        <a href="https://unsplash.com/@nganduong93" target="_blank" rel="noopener">Duong Ngan</a>,
-        <a href="https://unsplash.com/@ottelo" target="_blank" rel="noopener">Anton Acosta</a>,
-        <a href="https://unsplash.com/@howyblackbelt" target="_blank" rel="noopener">Holger Woizick</a>,
-        <a href="https://unsplash.com/@floriankrumm" target="_blank" rel="noopener">Florian Krumm</a>,
-        <a href="https://unsplash.com/@jorgenchu" target="_blank" rel="noopener">Jorge Garcia</a>,
-        <a href="https://unsplash.com/@chrsndrsn" target="_blank" rel="noopener">CHRSNDRSN</a>,
-        <a href="https://unsplash.com/@hlandkammer" target="_blank" rel="noopener">Holly Landkammer</a>,
-        <a href="https://unsplash.com/@tepapa" target="_blank" rel="noopener">Museum of New Zealand Te Papa Tongarewa</a>,
-        <a href="https://unsplash.com/@contentpixie" target="_blank" rel="noopener">Content Pixie</a>,
-        <a href="https://unsplash.com/@trnavskauni" target="_blank" rel="noopener">Trnava University</a>,
-        <a href="https://unsplash.com/@timebottlestudio_lennonlee" target="_blank" rel="noopener">Ly Le Minh</a>,
-        <a href="https://unsplash.com/@artchicago" target="_blank" rel="noopener">Art Institute of Chicago</a>,
-        <a href="https://unsplash.com/@evieshaffer" target="_blank" rel="noopener">Evie S.</a>,
-        <a href="https://unsplash.com/@exophist" target="_blank" rel="noopener">Shaueel Persadee</a>,
-        <a href="https://unsplash.com/@jasondeblooisphotography" target="_blank" rel="noopener">Jason D</a>,
-        <a href="https://unsplash.com/@iamromankraft" target="_blank" rel="noopener">Roman Kraft</a>,
-        <a href="https://unsplash.com/@davidchangkit" target="_blank" rel="noopener">David Chang Kit</a> and
-        <a href="https://unsplash.com/@milinjohn" target="_blank" rel="noopener">Milin John</a>
-        on <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>. Mapping by Google.
+        Real photography via Wikimedia Commons:
+        <a href="https://commons.wikimedia.org/wiki/File:Trinidad_national_museum_2006-23-02.JPG" target="_blank" rel="noopener">the museum building</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Michel_Jean_Cazabon_-_On_the_Caroni,_Trinidad.jpg" target="_blank" rel="noopener">Cazabon, On the Caroni</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Cazabon_-_Red_House_(1849).jpg" target="_blank" rel="noopener">Cazabon, The Red House</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Pitch_Lake.JPG" target="_blank" rel="noopener">Pitch Lake</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Angostura_bottle.jpg" target="_blank" rel="noopener">Angostura bitters</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Scarlet_ibis_(Eudocimus_ruber)_roosting.jpg" target="_blank" rel="noopener">scarlet ibis</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Ocelot_(Leopardus_pardalis)-8.jpg" target="_blank" rel="noopener">ocelot</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Steeldrum_band.JPG" target="_blank" rel="noopener">steelband</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Carnival_Costume_in_Trinidad.jpg" target="_blank" rel="noopener">Carnival costume</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:Orange_Carnival_Masqueraders_in_Trinidad.jpg" target="_blank" rel="noopener">Carnival masqueraders</a>,
+        <a href="https://commons.wikimedia.org/wiki/File:TnT_PoS_M7-1_Queen%27s_Royal_College.jpg" target="_blank" rel="noopener">Queen&rsquo;s Royal College</a> and
+        <a href="https://commons.wikimedia.org/wiki/File:Zemi_figure_1.jpg" target="_blank" rel="noopener">a Caribbean zemi figure</a>.
+        Emblem via the museum&rsquo;s <a href="https://www.facebook.com/nationalmuseumandartgallerytt/" target="_blank" rel="noopener">official Facebook page</a>. Mapping by Google.
       </p>
     </div>
     <div class="foot__bar">
-      <span>Concept demo &middot; not affiliated with NMAG</span>
+      <span>Concept demo &middot; not affiliated with or endorsed by NMAG</span>
       <span>Tweller Studios &middot; 2026</span>
     </div>
   </div>
@@ -672,8 +713,6 @@ html{ scroll-behavior:smooth; }
 
 /* ------------------------------------------------------------------
    Configuration
-   Drop a Google Maps Embed API key here and the Street View button
-   becomes an inline panorama instead of an outbound link.
 ------------------------------------------------------------------ */
 var CONFIG = {
   googleMapsApiKey: "",
@@ -682,111 +721,102 @@ var CONFIG = {
   placeQuery: "National Museum and Art Gallery, 117 Frederick Street, Port of Spain, Trinidad"
 };
 
-var U = function (id, w) { return "https://images.unsplash.com/photo-" + id + "?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=" + (w || 1200); };
+var IMG = {
+  museum:   "https://www.twellerstudios.com/wp-content/uploads/2026/09/the-national-museum-and-art-gallery-of-trinidad-and-tobago-t.jpg",
+  caroni:   "https://www.twellerstudios.com/wp-content/uploads/2026/09/on-the-caroni-trinidad-watercolour-by-michel-jean-cazabon-scaled.jpg",
+  redhouse: "https://www.twellerstudios.com/wp-content/uploads/2026/09/the-red-house-port-of-spain-painting-by-michel-jean-cazabon-scaled.jpg",
+  pitch:    "https://www.twellerstudios.com/wp-content/uploads/2026/09/pitch-lake-la-brea-trinidad-scaled.jpg",
+  angostura:"https://www.twellerstudios.com/wp-content/uploads/2026/09/a-bottle-of-angostura-aromatic-bitters-scaled.jpg",
+  ibis:     "https://www.twellerstudios.com/wp-content/uploads/2026/09/scarlet-ibis-roosting-trinidad-s-national-bird-scaled.jpg",
+  ocelot:   "https://www.twellerstudios.com/wp-content/uploads/2026/09/an-ocelot-a-native-wildcat-found-in-trinidad-s-forests-scaled.jpg",
+  steel:    "https://www.twellerstudios.com/wp-content/uploads/2026/09/a-trinidad-steelband-performing-on-steelpans-scaled.jpg",
+  costume:  "https://www.twellerstudios.com/wp-content/uploads/2026/09/a-trinidad-carnival-costume.jpg",
+  masq:     "https://www.twellerstudios.com/wp-content/uploads/2026/09/masqueraders-at-trinidad-carnival-port-of-spain.jpg",
+  qrc:      "https://www.twellerstudios.com/wp-content/uploads/2026/09/queen-s-royal-college-one-of-the-magnificent-seven-port-of-s-scaled.jpg",
+  zemi:     "https://www.twellerstudios.com/wp-content/uploads/2026/09/a-pre-columbian-caribbean-zemi-deity-figure-representative-o-scaled.jpg"
+};
 
 /* ------------------------------------------------------------------
-   Galleries — themes and holdings are drawn from published sources.
+   Galleries — one honestly-captioned spotlight photo each.
 ------------------------------------------------------------------ */
 var GALLERIES = [
   {
     id: "art", code: "G1", name: "Art & the Cazabon Collection",
-    pano: U("1572953109213-3be62398eb95", 2400),
-    alt: "A long hung gallery with visitors walking past framed works.",
-    text: "The gallery's heart. Works by Michel-Jean Cazabon (1813–1888), the first Trinidadian painter to win an international reputation, hang alongside later national artists. Cazabon's watercolours of the Caroni, the Port of Spain docks and the northern valleys are, for much of the nineteenth century, the closest thing the country has to a photographic record of itself."
+    img: IMG.caroni, cap: "On the Caroni, Trinidad — Michel-Jean Cazabon (real painting, held in the National Collection)",
+    text: "The gallery's heart. Works by Michel-Jean Cazabon (1813–1888), the first Trinidadian painter to win an international reputation, hang alongside later national artists. Cazabon's watercolours of the Caroni, the Port of Spain docks and the northern valleys are, for much of the nineteenth century, the closest thing the country has to a photographic record of itself.",
+    facts: [["Medium","Watercolour"],["Period","19th century"],["On view","Permanent"]]
   },
   {
     id: "first", code: "G2", name: "The First Peoples",
-    pano: U("1729673284876-d7a240c50b43", 2400),
-    alt: "Ceramic vessels displayed in a dimly lit case-lined room.",
-    text: "Artefacts of the island's earliest inhabitants — the Amerindian communities whose settlements along the Caroni and the north coast predate European arrival by millennia. Ceramics, worked shell and stone, and archaeological finds from sites across Trinidad."
+    img: IMG.zemi, cap: "A pre-Columbian Caribbean zemi figure — representative photograph, not an NMAG object",
+    text: "Artefacts of the island's earliest inhabitants — the Amerindian communities whose settlements along the Caroni and the north coast predate European arrival by millennia, including finds from Banwari Trace, the oldest known archaeological site in the Caribbean.",
+    facts: [["Period","Pre-Columbian"],["Culture","Saladoid & later"],["On view","Permanent"]]
   },
   {
     id: "carnival", code: "G3", name: "Carnival Arts",
-    pano: U("1767801829041-f5243a34525d", 2400),
-    alt: "Masqueraders in elaborate feathered costumes at a street festival.",
-    text: "A permanent display of mas — masks, headpieces and costumes from Carnivals past. From the sailor and the midnight robber to the wire-bent grandeur of the modern king and queen, the room traces how a street festival became the country's largest act of collective authorship."
+    img: IMG.masq, cap: "Masqueraders at Trinidad Carnival, Port of Spain (real photograph)",
+    text: "A permanent display of mas — masks, headpieces and costumes from Carnivals past. From the sailor and the midnight robber to the wire-bent grandeur of the modern king and queen, the room traces how a street festival became the country's largest act of collective authorship.",
+    facts: [["Focus","Costume & performance"],["Instrument","Steelpan"],["On view","Permanent"]]
   },
   {
     id: "social", code: "G4", name: "Social History",
-    pano: U("1557680378-b6d7373d083e", 2400),
-    alt: "An arched colonial hallway with a wall clock.",
-    text: "Colonial administration, emancipation, Indian indenture, and the American bases of the Second World War — the making of a plural society, told through documents, dress, photographs and household objects."
+    img: IMG.qrc, cap: "Queen's Royal College, one of the Magnificent Seven — colonial Port of Spain (real photograph)",
+    text: "Colonial administration, emancipation, Indian indenture, and the American bases of the Second World War — the making of a plural society, seen against the civic architecture the colony built for itself along the Queen's Park Savannah.",
+    facts: [["Period","19th–20th century"],["Focus","Colonial & social"],["On view","Permanent"]]
   },
   {
     id: "economic", code: "G5", name: "Economic History",
-    pano: U("1763556736762-7010ea835e2d", 2400),
-    alt: "Sunlight falling through a long arched stone passageway.",
-    text: "Sugar, cocoa and bitters. Among the room's holdings is an original puncheon used by Dr J. G. B. Siegert in the manufacture of Angostura aromatic bitters — the product that carried the name of a Venezuelan town onto back bars on every continent."
+    img: IMG.angostura, cap: "Angostura aromatic bitters (real photograph, product reference)",
+    text: "Sugar, cocoa and bitters. Among the room's holdings is an original puncheon used by Dr J. G. B. Siegert in the manufacture of Angostura aromatic bitters — the product that carried the name of a Venezuelan town onto back bars on every continent.",
+    facts: [["Founded","1824"],["Export","Global"],["On view","Permanent"]]
   },
   {
     id: "petroleum", code: "G6", name: "Petroleum & Geology",
-    pano: U("1780162706863-35e2d5df4e07", 2400),
-    alt: "Industrial port structures silhouetted against a dramatic sunset.",
-    text: "Trinidad drilled one of the world's earliest oil wells and has lived with the consequences ever since. The gallery covers the geology beneath the island, the Pitch Lake at La Brea, and the offshore rigs that reshaped the twentieth-century economy."
+    img: IMG.pitch, cap: "The Pitch Lake, La Brea, Trinidad (real photograph)",
+    text: "Trinidad drilled one of the world's earliest oil wells and has lived with the consequences ever since. The gallery covers the geology beneath the island, the Pitch Lake at La Brea — the largest natural deposit of asphalt on Earth — and the offshore rigs that reshaped the twentieth-century economy.",
+    facts: [["Site","La Brea"],["Type","Natural asphalt"],["On view","Permanent"]]
   },
   {
     id: "natural", code: "G7", name: "Natural History",
-    pano: U("1682289497815-b1b3805c7359", 2400),
-    alt: "A wall of mounted butterfly specimens in display cases.",
-    text: "Two islands sitting on the South American continental shelf — which is why Trinidad has ocelots, howler monkeys and some four hundred bird species where its Caribbean neighbours do not. Mounted specimens, insects, and the scarlet ibis, the national bird."
+    img: IMG.ibis, cap: "The scarlet ibis, Trinidad and Tobago's national bird (real photograph)",
+    text: "Two islands sitting on the South American continental shelf — which is why Trinidad has ocelots, howler monkeys and some four hundred bird species where its Caribbean neighbours do not. The scarlet ibis, the national bird, is the gallery's emblem.",
+    facts: [["National bird","Scarlet ibis"],["Native wildcat","Ocelot"],["On view","Permanent"]]
   }
 ];
 
 /* ------------------------------------------------------------------
-   Objects — ILLUSTRATIVE placeholders. Accession numbers are marked
-   DEMO and do not correspond to real NMAG catalogue records.
+   Featured holdings — every image below is real; captions say
+   plainly whether it depicts the actual museum object.
 ------------------------------------------------------------------ */
 var OBJECTS = [
-  { g:"art", t:"Bamboo Arches, Northern Range", img:U("1606113014706-4aed0562853b"), medium:"Watercolour on paper", date:"c. 1850s", acc:"NMAG-DEMO-A014", x:.16, y:.46,
-    d:"A river cut framed by arching bamboo — one of the compositions Cazabon returned to repeatedly, and among the most copied images of nineteenth-century Trinidad." },
-  { g:"art", t:"Study of the Port of Spain Docks", img:U("1563000215-e31a8ddcb2d0"), medium:"Watercolour and graphite", date:"c. 1860s", acc:"NMAG-DEMO-A027", x:.42, y:.52,
-    d:"Shipping at the wharf, drawn from the western shore. Cazabon worked quickly in watercolour on site, finishing in the studio." },
-  { g:"art", t:"Portrait of a Planter's Household", img:U("1569783721854-33a99b4c0bae"), medium:"Oil on canvas", date:"1871", acc:"NMAG-DEMO-A088", x:.71, y:.44,
-    d:"Commissioned portraiture formed a steady income for painters working the island's estate economy." },
+  { g:"art", t:"On the Caroni, Trinidad", img:IMG.caroni, medium:"Watercolour on paper", date:"19th century", note:"Held in the National Collection",
+    d:"A river cut framed by arching bamboo — one of the compositions Cazabon returned to repeatedly, and among the most reproduced images of nineteenth-century Trinidad." },
+  { g:"art", t:"The Red House, Port of Spain", img:IMG.redhouse, medium:"Oil on canvas", date:"1849", note:"Held in the National Collection",
+    d:"Cazabon's view of the seat of colonial and later national government, painted decades before the current Red House was built on the same site." },
 
-  { g:"first", t:"Globular Vessel with Incised Rim", img:U("1656088239658-ca839d7e8841"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F003", x:.2, y:.5,
-    d:"Domestic ware recovered from a coastal midden. Incised decoration around the shoulder is characteristic of the island's later ceramic sequence." },
-  { g:"first", t:"Storage Jar, Caroni Basin", img:U("1628074958552-7c9d0b4173b7"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F011", x:.48, y:.55,
-    d:"A large-capacity vessel of the kind used for water and fermented cassava, reconstructed from sherds." },
-  { g:"first", t:"Burial Urn Fragment", img:U("1651135200225-b5aee94f00bd"), medium:"Fired earthenware", date:"Pre-Columbian", acc:"NMAG-DEMO-F026", x:.77, y:.47,
-    d:"Secondary burial in ceramic urns is documented at several Trinidadian sites and links the island's communities to the Orinoco mainland." },
+  { g:"first", t:"Caribbean Zemi Figure", img:IMG.zemi, medium:"Carved deity figure", date:"Pre-Columbian", note:"Representative photograph, not an NMAG object",
+    d:"Zemis represented ancestral or nature spirits across the pre-Columbian Caribbean. Trinidad's own First Peoples gallery holds locally excavated ceramics and stonework of the same broad period." },
 
-  { g:"carnival", t:"Queen of the Band Headpiece", img:U("1642076195906-2804dead9a7e"), medium:"Wire, feather, sequin, fibreglass", date:"2000s", acc:"NMAG-DEMO-C007", x:.19, y:.48,
-    d:"Wire-bending is the structural craft beneath large mas — a skill passed through a small number of Port of Spain camps." },
-  { g:"carnival", t:"Midnight Robber Costume", img:U("1767801829436-d38dfa1a1b15"), medium:"Textile, braid, painted board", date:"Mid-20th century", acc:"NMAG-DEMO-C019", x:.5, y:.53,
-    d:"A traditional character mas built around the robber's spoken oration — a rhetorical performance as much as a costume." },
-  { g:"carnival", t:"Sailor Mas Ensemble", img:U("1718996955920-c00347f98707"), medium:"Cotton drill, paint, papier-mâché", date:"Mid-20th century", acc:"NMAG-DEMO-C033", x:.79, y:.5,
-    d:"Sailor mas took the uniform of visiting naval crews and turned it, through powder and exaggerated movement, into satire." },
-  { g:"carnival", t:"Tenor Pan", img:U("1659587661499-fc541e0508c1"), medium:"Tempered steel drum", date:"Late 20th century", acc:"NMAG-DEMO-C041", x:.35, y:.66,
-    d:"The steelpan is the only acoustic instrument invented in the twentieth century, and it was invented here." },
+  { g:"carnival", t:"Carnival Masqueraders, Port of Spain", img:IMG.masq, medium:"Photograph", date:"Contemporary", note:"Real photograph of Trinidad Carnival",
+    d:"Carnival's costume tradition runs from the historic sailor and midnight robber mas to today's wire-bent kings and queens." },
+  { g:"carnival", t:"Carnival Costume", img:IMG.costume, medium:"Photograph", date:"Contemporary", note:"Real photograph of Trinidad Carnival",
+    d:"Feather, sequin and wire construction — the craft of a Port of Spain mas camp, built the same way the museum's own costume collection was." },
+  { g:"carnival", t:"Steelband", img:IMG.steel, medium:"Photograph", date:"Contemporary", note:"Real photograph, tenor and bass pans",
+    d:"The steelpan is the only acoustic instrument invented in the twentieth century, and it was invented here, tempered from oil drums by Laventille panmen." },
 
-  { g:"social", t:"Album of Studio Portraits", img:U("1528569937393-ee892b976859"), medium:"Albumen prints, bound", date:"c. 1900–1930", acc:"NMAG-DEMO-S005", x:.22, y:.52,
-    d:"Commercial studio photography documented a society being remade by emancipation and indenture." },
-  { g:"social", t:"Correspondence and Estate Papers", img:U("1453828423292-392a660a502f"), medium:"Ink on paper", date:"19th century", acc:"NMAG-DEMO-S018", x:.53, y:.58,
-    d:"Ledgers, indenture records and household correspondence — the paper trail of the plantation economy." },
-  { g:"social", t:"Wartime Ephemera, US Bases", img:U("1722173205783-d602329f0743"), medium:"Photographic prints", date:"1941–1947", acc:"NMAG-DEMO-S052", x:.78, y:.5,
-    d:"The Chaguaramas and Waller Field bases brought thousands of American servicemen — and calypso's sharpest social commentary." },
+  { g:"social", t:"Queen's Royal College", img:IMG.qrc, medium:"Photograph", date:"Built 1904", note:"Real photograph, Magnificent Seven",
+    d:"One of the seven civic and residential landmarks built along the Queen's Park Savannah in the same colonial decades the museum's Social History gallery covers." },
 
-  { g:"economic", t:"Angostura Puncheon", img:U("1447069387593-a5de0862481e"), medium:"Oak, iron hoops", date:"19th century", acc:"NMAG-DEMO-E001", x:.24, y:.5,
-    d:"An original puncheon used by Dr J. G. B. Siegert in the manufacture of Angostura aromatic bitters. The museum holds it as the founding object of the country's best-known export brand." },
-  { g:"economic", t:"Cacao Pods, Trinitario", img:U("1573710661345-610f790e1218"), medium:"Botanical specimen", date:"Collected 20th century", acc:"NMAG-DEMO-E014", x:.55, y:.56,
-    d:"Trinitario cacao — a cross of Criollo and Forastero that arose on this island — remains a benchmark fine-flavour bean." },
-  { g:"economic", t:"Estate Weighing Scale", img:U("1611078295948-10b3961e1e40"), medium:"Cast iron and brass", date:"c. 1900", acc:"NMAG-DEMO-E029", x:.8, y:.49,
-    d:"Field scales of this pattern were used across the sugar and cocoa estates to weigh a day's cut." },
+  { g:"economic", t:"Angostura Aromatic Bitters", img:IMG.angostura, medium:"Photograph", date:"Founded 1824", note:"Real product photograph",
+    d:"The museum holds an original puncheon used by Dr J. G. B. Siegert in the bitters' manufacture — the founding object of the country's best-known export brand." },
 
-  { g:"petroleum", t:"Pitch Lake Asphalt Sample", img:U("1596226310268-f76b50d14a4a"), medium:"Natural asphalt", date:"Collected 20th century", acc:"NMAG-DEMO-P002", x:.21, y:.55,
-    d:"From La Brea — the largest natural deposit of asphalt in the world, and paving material for streets from London to New York." },
-  { g:"petroleum", t:"Core Sample Series", img:U("1546608135-e5de34abc308"), medium:"Drilled rock core", date:"20th century", acc:"NMAG-DEMO-P016", x:.52, y:.5,
-    d:"Cores of the sedimentary sequence beneath southern Trinidad, showing the reservoir rock that made the fields productive." },
-  { g:"petroleum", t:"Offshore Rig Model", img:U("1786700960080-15d9ad057815"), medium:"Painted metal and acrylic", date:"Late 20th century", acc:"NMAG-DEMO-P037", x:.79, y:.46,
-    d:"A cutaway model used to explain drilling to schools — one of the gallery's most-used teaching objects." },
+  { g:"petroleum", t:"Pitch Lake, La Brea", img:IMG.pitch, medium:"Photograph", date:"Present day", note:"Real photograph of the actual site",
+    d:"The largest natural deposit of asphalt in the world, and paving material for streets from London to New York." },
 
-  { g:"natural", t:"Scarlet Ibis", img:U("1617654611907-21b4f00ea36a"), medium:"Mounted specimen", date:"Undated", acc:"NMAG-DEMO-N001", x:.2, y:.48,
-    d:"Eudocimus ruber — the national bird, and the reason the Caroni Swamp fills with red at dusk." },
-  { g:"natural", t:"Lepidoptera Case", img:U("1542650507-17d51cecbbb5"), medium:"Pinned specimens, glazed case", date:"Assembled 20th century", acc:"NMAG-DEMO-N022", x:.5, y:.53,
-    d:"Trinidad's butterfly fauna is continental rather than insular — richer by an order of magnitude than the islands to the north." },
-  { g:"natural", t:"Blue Morpho", img:U("1560263816-af96782560f3"), medium:"Pinned specimen", date:"Undated", acc:"NMAG-DEMO-N044", x:.76, y:.5,
-    d:"The wing's blue is structural, not pigmented — produced by microscopic lamellae rather than dye." }
+  { g:"natural", t:"Scarlet Ibis", img:IMG.ibis, medium:"Photograph", date:"Present day", note:"Real photograph, Eudocimus ruber",
+    d:"The national bird, and the reason the Caroni Swamp fills with red at dusk." },
+  { g:"natural", t:"Ocelot", img:IMG.ocelot, medium:"Photograph", date:"Present day", note:"Real photograph, Leopardus pardalis",
+    d:"A secretive spotted wildcat of Trinidad's forest and swamp mosaic — rarely seen, and a continental holdover from when the island was joined to South America." }
 ];
 
 /* ------------------------------------------------------------------
@@ -796,171 +826,45 @@ var $ = function (s, r) { return (r || document).querySelector(s); };
 var objsFor = function (gid) { return OBJECTS.filter(function (o) { return o.g === gid; }); };
 var gById = function (gid) { for (var i = 0; i < GALLERIES.length; i++) if (GALLERIES[i].id === gid) return GALLERIES[i]; return null; };
 
-/* ---------- room navigation ---------- */
-var roomnav = $("#roomnav");
+/* ---------- gallery tabs + spotlight ---------- */
+var gnav = $("#gnav");
 GALLERIES.forEach(function (g, i) {
   var b = document.createElement("button");
-  b.className = "roomtab";
+  b.className = "gtab";
   b.type = "button";
   b.setAttribute("role", "tab");
   b.setAttribute("aria-selected", i === 0 ? "true" : "false");
   b.dataset.g = g.id;
-  b.innerHTML = '<span class="roomtab__c">' + g.code + '</span><span class="roomtab__n"></span>';
-  $(".roomtab__n", b).textContent = g.name;
-  b.addEventListener("click", function () { selectRoom(g.id); });
-  roomnav.appendChild(b);
+  b.innerHTML = '<span class="gtab__c">' + g.code + '</span><span class="gtab__n"></span>';
+  $(".gtab__n", b).textContent = g.name;
+  b.addEventListener("click", function () { selectGallery(g.id); });
+  gnav.appendChild(b);
 });
 
-/* ---------- panorama ---------- */
-var pano = $("#pano"), track = $("#panoTrack"), hint = $("#panoHint"), scan = $("#panoScan");
-var offset = 0, minOffset = 0, dragging = false, startX = 0, startOffset = 0;
-var velocity = 0, lastX = 0, lastT = 0, rafId = null, driftId = null, touched = false;
-var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function apply() { track.style.transform = "translate3d(" + offset + "px,0,0)"; }
-function clamp(v) { return Math.max(minOffset, Math.min(0, v)); }
-
-function measure() {
-  var img = track.querySelector("img");
-  if (!img) return;
-  var tw = img.offsetWidth || track.offsetWidth;
-  minOffset = Math.min(0, pano.clientWidth - tw);
-  offset = clamp(offset);
-  apply();
-}
-
-function stopDrift() {
-  if (driftId) { cancelAnimationFrame(driftId); driftId = null; }
-}
-
-function startDrift() {
-  if (reduce || touched) return;
-  var dir = -1;
-  function step() {
-    if (touched) return;
-    offset += dir * 0.22;
-    if (offset <= minOffset || offset >= 0) dir *= -1;
-    offset = clamp(offset);
-    apply();
-    driftId = requestAnimationFrame(step);
-  }
-  driftId = requestAnimationFrame(step);
-}
-
-function markTouched() {
-  if (touched) return;
-  touched = true;
-  stopDrift();
-  hint.classList.add("is-gone");
-}
-
-pano.addEventListener("pointerdown", function (e) {
-  if (e.target.closest(".hot")) return;
-  markTouched();
-  dragging = true;
-  pano.classList.add("is-drag");
-  startX = lastX = e.clientX;
-  startOffset = offset;
-  lastT = performance.now();
-  velocity = 0;
-  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-  pano.setPointerCapture(e.pointerId);
-});
-
-pano.addEventListener("pointermove", function (e) {
-  if (!dragging) return;
-  offset = clamp(startOffset + (e.clientX - startX));
-  apply();
-  var now = performance.now(), dt = now - lastT;
-  if (dt > 0) { velocity = (e.clientX - lastX) / dt * 16; lastX = e.clientX; lastT = now; }
-});
-
-function endDrag(e) {
-  if (!dragging) return;
-  dragging = false;
-  pano.classList.remove("is-drag");
-  try { pano.releasePointerCapture(e.pointerId); } catch (err) {}
-  if (reduce) return;
-  (function glide() {
-    velocity *= 0.94;
-    if (Math.abs(velocity) < 0.15) { rafId = null; return; }
-    var next = clamp(offset + velocity);
-    if (next === offset) { rafId = null; return; }
-    offset = next; apply();
-    rafId = requestAnimationFrame(glide);
-  })();
-}
-pano.addEventListener("pointerup", endDrag);
-pano.addEventListener("pointercancel", endDrag);
-
-pano.addEventListener("keydown", function (e) {
-  var s = e.shiftKey ? 160 : 60;
-  if (e.key === "ArrowRight") { markTouched(); offset = clamp(offset - s); apply(); e.preventDefault(); }
-  if (e.key === "ArrowLeft")  { markTouched(); offset = clamp(offset + s); apply(); e.preventDefault(); }
-});
-
-window.addEventListener("resize", measure);
-
-/* ---------- select a room ---------- */
-function selectRoom(gid) {
+function selectGallery(gid) {
   var g = gById(gid);
   if (!g) return;
-
-  Array.prototype.forEach.call(roomnav.children, function (b) {
+  Array.prototype.forEach.call(gnav.children, function (b) {
     b.setAttribute("aria-selected", b.dataset.g === gid ? "true" : "false");
   });
-
-  stopDrift();
-  touched = false;
-  hint.classList.remove("is-gone");
-  scan.innerHTML = g.code + " &middot; 360&deg;";
-  pano.setAttribute("aria-label", "Panoramic view of " + g.name + ". Drag or use arrow keys to look around.");
-
-  track.innerHTML = "";
-  var img = new Image();
-  img.src = g.pano;
-  img.alt = g.alt;
-  img.decoding = "async";
-  track.appendChild(img);
-
-  var list = objsFor(gid);
-  list.forEach(function (o, i) {
-    var h = document.createElement("button");
-    h.className = "hot";
-    h.type = "button";
-    h.style.left = (o.x * 100) + "%";
-    h.style.top = (o.y * 100) + "%";
-    h.style.animationDelay = (i * 0.35) + "s";
-    h.textContent = String(i + 1);
-    h.setAttribute("aria-label", "Object " + (i + 1) + ": " + o.t);
-    h.addEventListener("click", function (e) { e.stopPropagation(); openObject(o); });
-    track.appendChild(h);
-  });
-
-  function ready() { offset = 0; measure(); offset = minOffset / 2; apply(); startDrift(); }
-  if (img.complete) ready(); else img.addEventListener("load", ready, { once: true });
-
-  // room label card
-  var label = $("#roomLabel");
-  label.innerHTML =
-    '<div class="label__code"><span>' + g.code + '</span><span>' + list.length + ' objects on view</span></div>' +
-    '<h3></h3><p></p>' +
-    '<div class="label__objs"><p class="eyebrow">In this room</p></div>';
-  $("h3", label).textContent = g.name;
-  $("p", label).textContent = g.text;
-  var box = $(".label__objs", label);
-  list.forEach(function (o, i) {
-    var b = document.createElement("button");
-    b.className = "objline";
-    b.type = "button";
-    b.innerHTML = '<span class="objline__n">' + (i + 1) + '</span><span class="objline__t"></span>';
-    $(".objline__t", b).textContent = o.t;
-    b.addEventListener("click", function () { openObject(o); });
-    box.appendChild(b);
+  $("#spotImg").src = g.img;
+  $("#spotImg").alt = g.cap;
+  $("#spotCap").textContent = g.cap;
+  $("#spotCode").textContent = g.code + " — " + g.name;
+  $("#spotTitle").textContent = g.name;
+  $("#spotText").textContent = g.text;
+  var facts = $("#spotFacts");
+  facts.innerHTML = "";
+  g.facts.forEach(function (f) {
+    var row = document.createElement("div");
+    row.innerHTML = "<dt></dt><dd></dd>";
+    row.querySelector("dt").textContent = f[0];
+    row.querySelector("dd").textContent = f[1];
+    facts.appendChild(row);
   });
 }
 
-/* ---------- collection grid ---------- */
+/* ---------- holdings grid ---------- */
 var filters = $("#filters"), grid = $("#grid");
 var FILTS = [{ id: "all", name: "All galleries" }].concat(GALLERIES.map(function (g) { return { id: g.id, name: g.name }; }));
 
@@ -990,8 +894,8 @@ function renderGrid(fid) {
       '<div class="card__fig"><span class="card__tag">' + g.code + '</span><img loading="lazy" decoding="async" src="' + o.img + '" alt=""></div>' +
       '<div class="card__body"><span class="card__t"></span><span class="card__m"></span></div>';
     $(".card__t", c).textContent = o.t;
-    $(".card__m", c).textContent = o.date + " · " + o.acc;
-    $("img", c).alt = o.t + " — stand-in photograph";
+    $(".card__m", c).textContent = o.date + " · " + o.note;
+    $("img", c).alt = o.t;
     c.addEventListener("click", function () { openObject(o); });
     grid.appendChild(c);
   });
@@ -1003,8 +907,8 @@ var ov = $("#ov"), lastFocus = null;
 function openObject(o) {
   var g = gById(o.g);
   lastFocus = document.activeElement;
-  $("#ovImg").src = o.img.replace("w=1200", "w=1600");
-  $("#ovImg").alt = o.t + " — stand-in photograph";
+  $("#ovImg").src = o.img;
+  $("#ovImg").alt = o.t;
   $("#ovRoom").innerHTML = g.code + " &middot; " + g.name;
   $("#ovTitle").textContent = o.t;
   $("#ovDesc").textContent = o.d;
@@ -1012,11 +916,11 @@ function openObject(o) {
     '<div><dt>Medium</dt><dd class="m1"></dd></div>' +
     '<div><dt>Date</dt><dd class="m2"></dd></div>' +
     '<div><dt>Gallery</dt><dd class="m3"></dd></div>' +
-    '<div><dt>Accession</dt><dd class="m4" style="font-family:var(--f-mono);font-size:.82rem;color:var(--oxblood)"></dd></div>';
+    '<div><dt>Note</dt><dd class="m4" style="color:#8A3B1E;font-weight:700"></dd></div>';
   $(".m1", ov).textContent = o.medium;
   $(".m2", ov).textContent = o.date;
   $(".m3", ov).textContent = g.name;
-  $(".m4", ov).textContent = o.acc;
+  $(".m4", ov).textContent = o.note;
   ov.classList.add("is-open");
   document.body.style.overflow = "hidden";
   $("#ovX").focus();
@@ -1044,7 +948,6 @@ function setMap(mode) {
 mMap.addEventListener("click", function () { setMap("map"); });
 mSat.addEventListener("click", function () { setMap("sat"); });
 
-// With an Embed API key, Street View becomes an inline panorama.
 if (CONFIG.googleMapsApiKey) {
   var sv = document.createElement("button");
   sv.className = "mbtn";
@@ -1071,6 +974,6 @@ if ("IntersectionObserver" in window) {
 }
 
 /* ---------- go ---------- */
-selectRoom("art");
+selectGallery("art");
 renderGrid("all");
 </script>
