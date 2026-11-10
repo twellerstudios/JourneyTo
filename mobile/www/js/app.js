@@ -149,6 +149,7 @@
         setActiveTab(tab);
         if (tab === 'posts') renderPosts();
         else if (tab === 'editor') renderEditor(null);
+        else if (tab === 'share') JourneyToShare.render({ el: el, toast: toast, view: view });
         else if (tab === 'settings') renderSettings();
     });
 

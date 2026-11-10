@@ -51,6 +51,26 @@ wp-admin afterwards.
   YouTube, X, Pinterest, LinkedIn, website) sourced from the companion
   plugin in `../wordpress-plugin/autoposter-companion`.
 
+## Share video to YouTube / Facebook / Instagram (via Postiz)
+
+The **Share** tab sends a video to your connected social channels through a
+[Postiz](https://postiz.com) instance's Public API. Postiz holds the
+platform OAuth connections; the app only needs the Postiz API key
+(Postiz → Settings → Developers → Public API) and, if self-hosted, the API
+URL (`https://<backend>/public/v1`; blank = Postiz Cloud).
+
+Safety defaults: sends as a **Postiz draft**, YouTube defaults to
+**private**, "Post now"/"Schedule" ask for confirmation, and a local log
+warns before the same video goes to the same channel twice (including after
+a network failure where the outcome is unknown — check Postiz before
+retrying). Code: `www/js/postiz.js` (client), `www/js/share.js` (screen).
+
+Known limits: the API key is stored in device Preferences (unencrypted, like
+the WordPress login); Postiz must allow cross-origin calls from the app
+(otherwise requests fail like a network error); `type: "draft"` is not on
+Postiz's public API intro page, so confirm it against your Postiz version.
+Untested against a live Postiz instance.
+
 ## Importing a pre-built Post File
 
 Tap **Import Post File** on the New Post screen and pick a `.json` file
